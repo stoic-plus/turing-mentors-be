@@ -1,8 +1,9 @@
 require 'rails_helper'
 
 describe User, type: :model do
-  context 'validations' do
+  describe 'validations' do
     it {should validate_presence_of(:name)}
+    it {should validate_presence_of(:active)}
     it {should validate_presence_of(:current_job)}
     it {should validate_presence_of(:background)}
     it {should validate_presence_of(:location)}
@@ -12,11 +13,15 @@ describe User, type: :model do
     it {should have_many(:nontech_skills).through(:user_nontech_skills)}
   end
 
-  context 'class methods' do
+  describe 'relationships' do
+    
+  end
+
+  describe 'class methods' do
 
   end
 
-  context 'instance methods' do
+  describe 'instance methods' do
 
   end
 end
