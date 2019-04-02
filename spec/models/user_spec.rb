@@ -8,13 +8,13 @@ describe User, type: :model do
     it {should validate_presence_of(:background)}
     it {should validate_presence_of(:location)}
     it {should validate_presence_of(:mentor)}
-    it {should have_many(:contact_details)}
-    it {should have_many(:tech_skills).through(:user_tech_skills)}
-    it {should have_many(:nontech_skills).through(:user_nontech_skills)}
   end
 
   describe 'relationships' do
-    
+    it {should have_many(:contact_details)}
+    it {should have_many(:identities).through(:user_identities)}
+    it {should have_many(:tech_skills).through(:user_tech_skills)}
+    it {should have_many(:nontech_skills).through(:user_nontech_skills)}
   end
 
   describe 'class methods' do
