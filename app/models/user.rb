@@ -1,6 +1,7 @@
 class User < ApplicationRecord
   validates_presence_of :name,
                         :current_job,
+                        :active,
                         :background,
                         :location,
                         :mentor
