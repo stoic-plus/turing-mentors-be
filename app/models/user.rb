@@ -3,8 +3,7 @@ class User < ApplicationRecord
                         :current_job,
                         :active,
                         :background,
-                        :location,
-                        :mentor
+                        :location
   has_one :contact_details
   has_many :user_identities
   has_many :identities, through: :user_identities
