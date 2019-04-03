@@ -3,7 +3,7 @@ class CreateUsers < ActiveRecord::Migration[5.2]
     create_table :users do |t|
       t.string :name
       t.integer :cohort
-      t.boolean :active, default: true
+      t.boolean :active
       t.string :program
       t.string :current_job
       t.text :background
