@@ -5,7 +5,11 @@ class User < ApplicationRecord
                         :background,
                         :location,
                         :mentor
-  has_many :contact_details
+  has_one :contact_details
+  has_many :user_identities
+  has_many :identities, through: :user_identities
+  has_many :user_tech_skills
   has_many :tech_skills, through: :user_tech_skills
-  has_many :nontech_skills, through: :user_nontech_skills
+  has_many :user_non_tech_skills
+  has_many :non_tech_skills, through: :user_non_tech_skills
 end

@@ -1,0 +1,3 @@
+class NonTechSkill < ApplicationRecord
+
+end
