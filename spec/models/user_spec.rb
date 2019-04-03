@@ -7,7 +7,6 @@ describe User, type: :model do
     it {should validate_presence_of(:current_job)}
     it {should validate_presence_of(:background)}
     it {should validate_presence_of(:location)}
-    it {should validate_presence_of(:mentor)}
   end
 
   describe 'relationships' do
