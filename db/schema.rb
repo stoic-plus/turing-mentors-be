@@ -41,22 +41,22 @@ ActiveRecord::Schema.define(version: 2019_04_02_232520) do
     t.string "title"
   end
 
-  create_table "non_user_tech_skills", force: :cascade do |t|
-    t.bigint "user_id"
-    t.bigint "non_tech_skill_id"
-    t.index ["non_tech_skill_id"], name: "index_non_user_tech_skills_on_non_tech_skill_id"
-    t.index ["user_id"], name: "index_non_user_tech_skills_on_user_id"
-  end
-
   create_table "tech_skills", force: :cascade do |t|
     t.string "title"
   end
 
   create_table "user_identities", force: :cascade do |t|
     t.bigint "user_id"
-    t.bigint "identity_id"
-    t.index ["identity_id"], name: "index_user_identities_on_identity_id"
+    t.bigint "identities_id"
+    t.index ["identities_id"], name: "index_user_identities_on_identities_id"
     t.index ["user_id"], name: "index_user_identities_on_user_id"
+  end
+
+  create_table "user_non_tech_skills", force: :cascade do |t|
+    t.bigint "user_id"
+    t.bigint "non_tech_skill_id"
+    t.index ["non_tech_skill_id"], name: "index_user_non_tech_skills_on_non_tech_skill_id"
+    t.index ["user_id"], name: "index_user_non_tech_skills_on_user_id"
   end
 
   create_table "user_tech_skills", force: :cascade do |t|
@@ -81,10 +81,10 @@ ActiveRecord::Schema.define(version: 2019_04_02_232520) do
 
   add_foreign_key "availabilities", "users"
   add_foreign_key "contact_details", "users"
-  add_foreign_key "non_user_tech_skills", "non_tech_skills"
-  add_foreign_key "non_user_tech_skills", "users"
-  add_foreign_key "user_identities", "identities"
+  add_foreign_key "user_identities", "identities", column: "identities_id"
   add_foreign_key "user_identities", "users"
+  add_foreign_key "user_non_tech_skills", "non_tech_skills"
+  add_foreign_key "user_non_tech_skills", "users"
   add_foreign_key "user_tech_skills", "tech_skills"
   add_foreign_key "user_tech_skills", "users"
 end
