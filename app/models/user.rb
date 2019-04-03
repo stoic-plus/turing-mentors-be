@@ -1,4 +1,7 @@
 class User < ApplicationRecord
+  scope :mentors, -> { where(mentor: true) }
+  scope :denver_mentors, -> { mentors.where(location: "Denver, CO") }
+
   validates_presence_of :name,
                         :current_job,
                         :active,

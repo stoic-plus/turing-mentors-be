@@ -19,7 +19,7 @@ describe User, type: :model do
     it {should have_many(:non_tech_skills).through(:user_non_tech_skills)}
   end
 
-  describe 'class methods' do
+  describe 'scopes' do
     before :each do
       @u_1 = User.create(name: 'Travis Gee', cohort: 1810, program: 'FE', current_job: 'graduate', background: 'IT', mentor: true, location: 'Denver, CO')
       @u_2 = User.create(name: 'Ben Gee', cohort: 1810, program: 'FE', current_job: 'graduate', background: 'IT', mentor: false, location: 'Denver, CO')
