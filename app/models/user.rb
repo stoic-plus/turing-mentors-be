@@ -19,6 +19,6 @@ class User < ApplicationRecord
   has_many :non_tech_skills, through: :user_non_tech_skills
 
   def list_tech_skills
-    joins(:tech_skills).pluck("tech_skills.title")
+    UserTechSkill.joins(:tech_skill).where(user_id: self.id).pluck("tech_skills.title")
   end
 end

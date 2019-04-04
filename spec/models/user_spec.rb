@@ -109,10 +109,10 @@ describe User, type: :model do
         UserTechSkill.create(user_id: user.id, tech_skill_id: t_3.id)
         UserTechSkill.create(user_id: user.id, tech_skill_id: t_4.id)
 
-        actual = user.tech_skills
+        actual = user.list_tech_skills
         expected = ['Elixir', 'Java']
 
-        expect(expected).to eq(actual)
+        expect(actual).to eq(expected)
       end
     end
   end
