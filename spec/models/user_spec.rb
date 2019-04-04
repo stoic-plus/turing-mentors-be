@@ -32,6 +32,9 @@ describe User, type: :model do
 
       @u_3 = User.create(name: 'Frank Gee', cohort: 1810, program: 'FE', current_job: 'graduate', background: 'IT', mentor: true, location: 'New York, NY')
       UserTechSkill.create(user_id: @u_3.id, tech_skill_id: @t_1.id)
+
+      @u_3 = User.create(name: 'Frank Gee', cohort: 1810, program: 'FE', current_job: 'graduate', background: 'IT', mentor: true, location: 'New York, NY')
+      UserTechSkill.create(user_id: @u_3.id, tech_skill_id: @t_1.id)
     end
 
     context '.mentors' do
@@ -99,6 +102,20 @@ describe User, type: :model do
   end
 
   describe 'instance methods' do
+    context '.tech_skills' do
+      it 'returns array of tech_skills this user has' do
+        t_3 = TechSkill.create(title: 'Elixir')
+        t_4 = TechSkill.create(title: 'Java')
 
+        user = User.create(name: 'Travis Bee', cohort: 1810, program: 'FE', current_job: 'graduate', background: 'IT', mentor: true, location: 'Denver, CO')
+        UserTechSkill.create(user_id: user.id, tech_skill_id: t_3.id)
+        UserTechSkill.create(user_id: user.id, tech_skill_id: t_4.id)
+
+        actual = user.tech_skills
+        expected = ['Elixir', 'Java']
+
+        expect(expected).to eq(actual)
+      end
+    end
   end
 end
