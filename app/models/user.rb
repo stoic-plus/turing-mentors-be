@@ -2,8 +2,8 @@ class User < ApplicationRecord
   scope :mentors, -> { where(mentor: true) }
   scope :denver_mentors, -> { mentors.where(location: "Denver, CO") }
   scope :remote_mentors, -> { mentors.where("location != 'Denver, CO'") }
-  scope :and_skills, -> { joins(:tech_skills) }
-  scope :tech_skilled_in, ->(languages) { and_skills.where("tech_skills.title": languages) }
+  scope :and_tech_skills, -> { joins(:tech_skills) }
+  scope :tech_skilled_in, ->(languages) { and_tech_skills.where("tech_skills.title": languages) }
 
   validates_presence_of :name,
                         :current_job,
@@ -18,5 +18,7 @@ class User < ApplicationRecord
   has_many :user_non_tech_skills
   has_many :non_tech_skills, through: :user_non_tech_skills
 
-
+  def list_tech_skills
+    joins(:tech_skills).pluck("tech_skills.title")
+  end
 end

@@ -32,15 +32,13 @@ describe User, type: :model do
 
       @u_3 = User.create(name: 'Frank Gee', cohort: 1810, program: 'FE', current_job: 'graduate', background: 'IT', mentor: true, location: 'New York, NY')
       UserTechSkill.create(user_id: @u_3.id, tech_skill_id: @t_1.id)
-
-      @u_3 = User.create(name: 'Frank Gee', cohort: 1810, program: 'FE', current_job: 'graduate', background: 'IT', mentor: true, location: 'New York, NY')
-      UserTechSkill.create(user_id: @u_3.id, tech_skill_id: @t_1.id)
     end
 
     context '.mentors' do
       it 'returns mentor users' do
         actual = User.mentors
         expected = [@u_1, @u_3]
+
         expect(actual).to eq(expected)
       end
     end
@@ -63,9 +61,9 @@ describe User, type: :model do
       end
     end
 
-    context '.mentors.and_skills' do
+    context '.mentors.and_tech_skills' do
       it 'returns joins table of those' do
-        joins = User.mentors.and_skills
+        joins = User.mentors.and_tech_skills
         expect(joins.size).to eq(2)
         expect(joins.first.name).to eq("Travis Gee")
         expect(joins.first.mentor).to be_truthy
@@ -102,7 +100,7 @@ describe User, type: :model do
   end
 
   describe 'instance methods' do
-    context '.tech_skills' do
+    context '#tech_skills' do
       it 'returns array of tech_skills this user has' do
         t_3 = TechSkill.create(title: 'Elixir')
         t_4 = TechSkill.create(title: 'Java')
