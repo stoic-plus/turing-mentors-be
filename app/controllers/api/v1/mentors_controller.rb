@@ -4,10 +4,7 @@ class Api::V1::MentorsController < ApplicationController
     if params["tech_skills"]
       mentors = mentors.tech_skilled_in('Javascript')
     end
-    options = {
-      include: [:tech_skills]
-    }
-    render json: UserSerializer.new(mentors, options), status: 200
+    render json: UserSerializer.new(mentors), status: 200
   end
 
   def get_mentors_by_location(location_param)
