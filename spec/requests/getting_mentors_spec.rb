@@ -5,15 +5,15 @@ describe 'Getting Mentors', type: :request do
     @t_1 = TechSkill.create(title: 'Javascript')
     @t_2 = TechSkill.create(title: 'Ruby')
 
-    @u_1 = User.create(name: 'Travis Gee', cohort: 1810, program: 'FE', current_job: 'student', background: 'IT', mentor: true, location: 'Denver, CO')
+    @u_1 = User.create(name: 'Travis Gee', cohort: 1810, program: 'FE', current_job: 'google', background: 'IT', mentor: true, location: 'Denver, CO')
     UserTechSkill.create(user_id: @u_1.id, tech_skill_id: @t_2.id)
-    @u_2 = User.create(name: 'Bob Gee', cohort: 1810, program: 'FE', current_job: 'student', background: 'IT', mentor: true, location: 'New York, CO')
+    @u_2 = User.create(name: 'Bob Gee', cohort: 1810, program: 'FE', current_job: 'google', background: 'IT', mentor: true, location: 'New York, CO')
     UserTechSkill.create(user_id: @u_2.id, tech_skill_id: @t_2.id)
 
-    @u_3 = User.create(name: 'Jordan Gee', cohort: 1810, program: 'FE', current_job: 'student', background: 'IT', mentor: true, location: 'New York, NY')
+    @u_3 = User.create(name: 'Jordan Gee', cohort: 1810, program: 'FE', current_job: 'google', background: 'IT', mentor: true, location: 'New York, NY')
     UserTechSkill.create(user_id: @u_3.id, tech_skill_id: @t_1.id)
 
-    @u_4 = User.create(name: 'J J', cohort: 1810, program: 'FE', current_job: 'student', background: 'IT', mentor: true, location: 'Denver, CO')
+    @u_4 = User.create(name: 'J J', cohort: 1810, program: 'FE', current_job: 'google', background: 'IT', mentor: true, location: 'Denver, CO')
     UserTechSkill.create(user_id: @u_4.id, tech_skill_id: @t_1.id)
   end
 

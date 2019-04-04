@@ -42,6 +42,15 @@ describe User, type: :model do
         expect(actual).to eq(expected)
       end
     end
+
+    context '.remote_mentors' do
+      it 'returns mentor users who are not in denver' do
+        actual = User.remote_mentors
+        expected = [@u_3]
+
+        expect(actual).to eq(expected)
+      end
+    end
   end
 
   describe 'instance methods' do
