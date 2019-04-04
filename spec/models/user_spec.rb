@@ -60,9 +60,9 @@ describe User, type: :model do
       end
     end
 
-    context '.mentors_and_skills' do
+    context '.mentors.and_skills' do
       it 'returns joins table of those' do
-        joins = User.mentors_and_skills
+        joins = User.mentors.and_skills
         expect(joins.size).to eq(2)
         expect(joins.first.name).to eq("Travis Gee")
         expect(joins.first.mentor).to be_truthy
@@ -77,22 +77,23 @@ describe User, type: :model do
     end
 
     context '.tech_skilled_in' do
-      it 'returns mentors where tech_skills includes passed languages' do
+      it 'returns users where tech_skills includes passed languages' do
         skilled_in_r = User.tech_skilled_in('Ruby')
 
         expect(skilled_in_r.size).to eq(1)
-        expect(skilled_in_r.first.mentor).to be_truthy
         expect(skilled_in_r.first.name).to eq("Travis Gee")
         expect(skilled_in_r.first.tech_skills.size).to eq(1)
         expect(skilled_in_r.first.tech_skills.first.title).to eq("Ruby")
 
         skilled_in_j = User.tech_skilled_in('Javascript')
 
-        expect(skilled_in_j.size).to eq(1)
-        expect(skilled_in_j.first.mentor).to be_truthy
-        expect(skilled_in_j.first.name).to eq("Frank Gee")
+        expect(skilled_in_j.size).to eq(2)
+        expect(skilled_in_j.first.name).to eq("Ben Gee")
+        expect(skilled_in_j.second.name).to eq("Frank Gee")
         expect(skilled_in_j.first.tech_skills.size).to eq(1)
+        expect(skilled_in_j.second.tech_skills.size).to eq(1)
         expect(skilled_in_j.first.tech_skills.first.title).to eq("Javascript")
+        expect(skilled_in_j.second.tech_skills.first.title).to eq("Javascript")
       end
     end
   end
