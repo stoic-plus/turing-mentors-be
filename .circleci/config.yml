@@ -8,7 +8,7 @@ jobs:
     working_directory: ~/turing_mentors_be
     docker:
       # specify the version you desire here
-      - image: circleci/ruby:2.4.1-node-browsers
+      - image: circleci/ruby:2.4.5-stretch
         environment:
           BUNDLER_VERSION: 2.0.1
           PGHOST: localhost
