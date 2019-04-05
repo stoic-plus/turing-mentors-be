@@ -21,4 +21,10 @@ class User < ApplicationRecord
   def list_tech_skills
     UserTechSkill.joins(:tech_skill).where(user_id: self.id).pluck("tech_skills.title")
   end
+
+  def self.get_mentors_by_location(location_param)
+    return User.mentors if location_param == "all"
+    return User.denver_mentors if location_param == "denver"
+    return User.remote_mentors if location_param == "remote"
+  end
 end
