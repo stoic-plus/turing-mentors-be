@@ -23,6 +23,14 @@ class User < ApplicationRecord
     UserTechSkill.joins(:tech_skill).where(user_id: self.id).pluck("tech_skills.title")
   end
 
+  def list_availability
+    Availability.where(user: self).pluck(:day_of_week, :morning, :afternoon, :evening)
+      .reduce({}) do |availability, day_of_week|
+        availability[day_of_week[0]] = day_of_week.slice(1, 4)
+        availability
+      end
+  end
+
   def self.get_mentors_by_location(location_param)
     return User.mentors if location_param == "all"
     return User.denver_mentors if location_param == "denver"

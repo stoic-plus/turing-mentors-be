@@ -121,8 +121,8 @@ describe User, type: :model do
     context '#list_availability' do
       it 'returns hash with day_of_week keys and time_of_day array value' do
         user = User.create(first_name: 'Travis', last_name: 'Bee', cohort: 1810, program: 'FE', current_job: 'graduate', background: 'IT', mentor: true, location: 'Denver, CO')
-        Availability.create(day_of_week: 0, morning: false, afternoon: true, evening: false)
-        Availability.create(day_of_week: 1, morning: true, afternoon: true, evening: false)
+        Availability.create(day_of_week: 0, morning: false, afternoon: true, evening: false, user: user)
+        Availability.create(day_of_week: 1, morning: true, afternoon: true, evening: false, user: user)
 
         actual = user.list_availability
         expected = {
