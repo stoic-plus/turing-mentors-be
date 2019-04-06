@@ -1,4 +1,7 @@
 class Availability < ApplicationRecord
   belongs_to :user
-  validates_presence_of :day_of_week, :start, :end
+  validates :day_of_week, presence: true
+  validates :morning, inclusion: { in: [true, false] }
+  validates :afternoon, inclusion: { in: [true, false] }
+  validates :evening, inclusion: { in: [true, false] }
 end
