@@ -146,5 +146,22 @@ describe User, type: :model do
         expect(actual).to eq(expected)
       end
     end
+
+    context '#list_contact_details' do
+      it 'returns a hash with contact type as key and string as value' do
+        user = User.create(first_name: 'Travis', last_name: 'Bee', cohort: 1810, program: 'FE', current_job: 'graduate', background: 'IT', mentor: true, location: 'Denver, CO')
+        contact_info = {
+          email: "email",
+          slack: "@slack",
+          phone: "720"
+        }
+        user.contact_details << ContactDetails.create(contact_info)
+
+        expected = contact_info
+        actual = user.list_contact_details
+
+        expect(actual).to eq(expected)
+      end
+    end
   end
 end
