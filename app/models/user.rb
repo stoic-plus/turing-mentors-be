@@ -11,6 +11,7 @@ class User < ApplicationRecord
                         :background,
                         :location
   has_one :contact_details
+  has_many :availabilities
   has_many :user_identities
   has_many :identities, through: :user_identities
   has_many :user_tech_skills
