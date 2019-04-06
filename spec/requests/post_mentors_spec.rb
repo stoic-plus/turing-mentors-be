@@ -7,11 +7,12 @@ describe 'POST /mentors', type: :request do
       background: "...",
       cohort: 1810,
       program: "BE",
+      current_job: "Ibotta",
       email: "j@mail.com",
-      firstName: "j",
+      first_name: "j",
       tech_skills: [0, 1, 3],
       identities: [1],
-      lastName: "l",
+      last_name: "l",
       phone: "720",
       slack: "@slack",
       availability: {
@@ -36,16 +37,16 @@ describe 'POST /mentors', type: :request do
       tech_skills = TechSkill.where(id: @user[:tech_skills]).pluck(:title)
       identities = Identity.where(id: @user[:identities]).pluck(:title)
       created_user = JSON.parse(response.body)["data"]["attributes"]
-      
-      expect(created_user["first_name"]).to eq(@user[:firstName])
-      expect(created_user["last_name"]).to eq(@user[:lastName])
-      expect(created_user["cohort"]).to eq(@user)
-      expect(created_user["program"]).to eq(@user)
+
+      expect(created_user["first_name"]).to eq(@user[:first_name])
+      expect(created_user["last_name"]).to eq(@user[:last_name])
+      expect(created_user["cohort"]).to eq(@user[:cohort])
+      expect(created_user["program"]).to eq(@user[:program])
       expect(created_user).to have_key("current_job")
-      expect(created_user["background"]).to eq(@user)
+      expect(created_user["background"]).to eq(@user[:background])
       expect(created_user["mentor"]).to be_truthy
-      expect(created_user["location"]).to eq(@user[:location])
       expect(created_user["tech_skills"]).to eq(tech_skills)
+      binding.pry
       expect(created_user["identities"]).to eq(identities)
       expect(created_user["contact_details"]).to eq({
         email: @user[:email],

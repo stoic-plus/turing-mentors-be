@@ -4,4 +4,10 @@ class UserSerializer
   attribute :tech_skills do |user|
     user.list_tech_skills
   end
+  attribute :availability do |user|
+    user.list_availability
+  end
+  attribute :identities do |user|
+    user.list_identities
+  end
 end
