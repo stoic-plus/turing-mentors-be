@@ -5,7 +5,7 @@ class CreateContactDetails < ActiveRecord::Migration[5.2]
       t.string :slack
       t.string :linkedin
       t.string :phone
-      t.integer :preferred_method
+      t.integer :preferred_method, default: 1
     end
   end
 end

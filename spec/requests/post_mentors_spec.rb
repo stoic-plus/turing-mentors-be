@@ -13,18 +13,21 @@ describe 'POST /mentors', type: :request do
       lastName: "l",
       phone: "720",
       slack: "@slack",
-      timeFri: [true, false, true],
-      timeMon: true,
-      timeSat: [true, false, false],
-      timeSun: [true, false, true],
-      timeThu: [false, false, true],
-      timeTue: [true, false, true],
-      timeWed: [true, false, false]
+      availability: {
+        0 => [true, false, true],
+        1 => true,
+        2 => [true, false, false],
+        3 => [true, false, true],
+        4 => [false, false, true],
+        5 => [true, false, true],
+        6 => [true, false, false]
+      }
+
     }
   end
 
   context 'passing all neccesary attributes' do
-    User.create(name: 'Travis Gee', cohort: 1810, program: 'FE', current_job: 'google', background: 'IT', mentor: true, location: 'Denver, CO')
+    User.create(first_name: 'Travis', last_name: 'Gee', cohort: 1810, program: 'FE', current_job: 'google', background: 'IT', mentor: true, location: 'Denver, CO')
     it 'returns the created mentor' do
       post '/api/v1/mentors', params: @user
 
@@ -48,13 +51,13 @@ describe 'POST /mentors', type: :request do
         slack: @user[:slack]
       })
       expect(created_user["availability"]).to eq({
-        timeFri: @user[:timeFri],
-        timeMon: @user[:timeMon],
-        timeSat: @user[:timeSat],
-        timeSun: @user[:timeSun],
-        timeThu: @user[:timeThu],
-        timeTue: @user[:timeTue],
-        timeWed: @user[:timeWed]
+        0 => @user[0],
+        1 => @user[1],
+        2 => @user[2],
+        3 => @user[3],
+        4 => @user[4],
+        5 => @user[5],
+        6 => @user[6]
       })
       expect(response).to be_successful
     end
