@@ -68,13 +68,14 @@ ActiveRecord::Schema.define(version: 2019_04_06_154752) do
   end
 
   create_table "users", force: :cascade do |t|
-    t.string "name"
+    t.string "first_name"
+    t.string "last_name"
     t.integer "cohort"
     t.boolean "active", default: true
     t.string "program"
-    t.string "current_job"
+    t.string "current_job", default: "student"
     t.text "background"
-    t.string "location"
+    t.string "location", default: "Denver, CO"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.boolean "mentor", default: false

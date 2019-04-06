@@ -5,7 +5,8 @@ class User < ApplicationRecord
   scope :and_tech_skills, -> { joins(:tech_skills) }
   scope :tech_skilled_in, ->(languages) { and_tech_skills.where("tech_skills.title": languages) }
 
-  validates_presence_of :name,
+  validates_presence_of :first_name,
+                        :last_name,
                         :current_job,
                         :background,
                         :location
