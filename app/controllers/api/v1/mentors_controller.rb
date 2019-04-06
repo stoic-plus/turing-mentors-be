@@ -25,8 +25,10 @@ class Api::V1::MentorsController < ApplicationController
         phone: mentor_attributes[:phone]
       }
       ContactDetails.create(contact_info)
-      mentor_attributes[:identities].each do |identity_id|
-        UserIdentity.create(user: user, identity: identity_id)
+      identities = Identity.where(id: mentor_attributes[:identities])
+      identities.each do |identity|
+        binding.pry
+        UserIdentity.create(user: mentor, identity: self)
       end
       mentor_attributes[:availability].each do |day, time_of_day|
         morning, afternoon, evening = time_of_day
@@ -52,18 +54,20 @@ class Api::V1::MentorsController < ApplicationController
     :program,
     :email,
     :firstName,
-    :tech_skills,
-    :identities,
     :lastName,
     :phone,
     :slack,
-    :timeFri,
-    :timeMon,
-    :timeSat,
-    :timeSun,
-    :timeThu,
-    :timeTue,
-    :timeWed
+    :tech_skills => [],
+    :identities => [],
+    :availability => {
+      "0": [],
+      "1": [],
+      "2": [],
+      "3": [],
+      "4": [],
+      "5": [],
+      "6": [],
+    }
   )
   end
 end
