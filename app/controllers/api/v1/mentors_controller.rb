@@ -17,7 +17,6 @@ class Api::V1::MentorsController < ApplicationController
       background: mentor_attributes[:background]
     }
     mentor = User.new(user_params)
-
     if mentor.save
       contact_info = {
         email: mentor_attributes[:email],
@@ -25,20 +24,21 @@ class Api::V1::MentorsController < ApplicationController
         phone: mentor_attributes[:phone]
       }
       ContactDetails.create(contact_info)
-      identities = Identity.where(id: mentor_attributes[:identities])
+      identities = Identity.where(id: mentor_attributes[:identities].map(&:to_i))
       identities.each do |identity|
-        binding.pry
-        UserIdentity.create(user: mentor, identity: self)
+        mentor.identities << identity
       end
       mentor_attributes[:availability].each do |day, time_of_day|
         morning, afternoon, evening = time_of_day
-        Availability.create(
+        mentor.availabilities << Availability.create!(
           day_of_week: day,
           morning: morning,
           afternoon: afternoon,
-          evening: evening
+          evening: evening,
+          user: mentor
         )
       end
+      binding.pry
       render json: UserSerializer.new(mentor), status: 200
     else
       render json: { message: "incorrect user information supplied"}, status: 400
