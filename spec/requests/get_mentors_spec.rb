@@ -4,7 +4,7 @@ describe 'GET /mentors', type: :request do
   before :each do
     @t_1 = TechSkill.create(title: 'javascript')
     @t_2 = TechSkill.create(title: 'ruby')
-
+    User.destroy_all
     @u_1 = User.create(name: 'Travis Gee', cohort: 1810, program: 'FE', current_job: 'google', background: 'IT', mentor: true, location: 'Denver, CO')
     UserTechSkill.create(user_id: @u_1.id, tech_skill_id: @t_2.id)
 
