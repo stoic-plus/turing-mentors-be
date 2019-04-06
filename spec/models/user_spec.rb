@@ -138,10 +138,10 @@ describe User, type: :model do
         identity = Identity.create(title: "parent")
         identity_2 = Identity.create(title: "basketball person")
         user = User.create(first_name: 'Travis', last_name: 'Bee', cohort: 1810, program: 'FE', current_job: 'graduate', background: 'IT', mentor: true, location: 'Denver, CO')
-        user << identity
-        user << identity_2
+        user.identities << identity
+        user.identities << identity_2
         actual = user.list_identities
-        expect = ["parent", "basketball person"]
+        expected = ["parent", "basketball person"]
 
         expect(actual).to eq(expected)
       end

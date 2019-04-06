@@ -31,6 +31,10 @@ class User < ApplicationRecord
       end
   end
 
+  def list_identities
+    UserIdentity.joins(:identity).where("user_identities.user_id = ?", self.id).pluck(:title)
+  end
+
   def self.get_mentors_by_location(location_param)
     return User.mentors if location_param == "all"
     return User.denver_mentors if location_param == "denver"
