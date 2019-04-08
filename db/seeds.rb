@@ -16,31 +16,41 @@ i_3 = Identity.create(title: 'non-binary')
 @t_2 = TechSkill.create(title: 'javascript')
 @t_3 = TechSkill.create(title: 'python')
 @t_4 = TechSkill.create(title: 'java')
+
 @nt_1 = NonTechSkill.create(title: 'stress management')
 @nt_2 = NonTechSkill.create(title: 'public speaking')
 @nt_3 = NonTechSkill.create(title: 'resumes')
 
-u_1 = User.create(first_name: 'Travis', last_name: 'Gee', cohort: 1810, program: 'FE', current_job: 'student', background: 'IT', location: 'Denver, CO')
-UserIdentity.create(user: u_1, identity_id: i_1.id)
-u_2 = User.create(first_name: 'Robert', last_name: 'Ricardo', cohort: 1810, program: 'BE', current_job: 'student', background: 'CS', location: 'Denver, CO')
-UserIdentity.create(user: u_2, identity_id: i_1.id)
 
 @u_1 = User.create(first_name: 'Travy', last_name: 'Gee', cohort: 1810, program: 'FE', current_job: 'google', background: 'IT', mentor: true, location: 'Denver, CO')
-UserTechSkill.create(user_id: @u_1.id, tech_skill_id: @t_2.id)
-UserIdentity.create(user: @u_1, identity_id: i_2.id)
 @u_2 = User.create(first_name: 'Bob', last_name: 'Gee', cohort: 1810, program: 'FE', current_job: 'google', background: 'IT', mentor: true, location: 'New York, CO')
-UserTechSkill.create(user_id: @u_2.id, tech_skill_id: @t_2.id)
-UserIdentity.create(user: @u_2, identity_id: i_1.id)
-
 @u_3 = User.create(first_name: 'Jordan', last_name: 'Gee', cohort: 1810, program: 'FE', current_job: 'google', background: 'IT', mentor: true, location: 'New York, NY')
-UserTechSkill.create(user_id: @u_3.id, tech_skill_id: @t_1.id)
-UserIdentity.create(user: @u_3, identity_id: i_3.id)
-
 @u_4 = User.create(first_name: 'J', last_name: 'J', cohort: 1810, program: 'FE', current_job: 'google', background: 'IT', mentor: true, location: 'Denver, CO')
+
+
+UserIdentity.create(user: @u_1, identity_id: i_2.id)
+UserIdentity.create(user: @u_2, identity_id: i_1.id)
+UserIdentity.create(user: @u_3, identity_id: i_3.id)
 UserIdentity.create(user: @u_4, identity_id: i_3.id)
+
+UserTechSkill.create(user_id: @u_1.id, tech_skill_id: @t_2.id)
+UserTechSkill.create(user_id: @u_2.id, tech_skill_id: @t_2.id)
+UserTechSkill.create(user_id: @u_3.id, tech_skill_id: @t_1.id)
 UserTechSkill.create(user_id: @u_4.id, tech_skill_id: @t_1.id)
-UserTechSkill.create(user_id: @u_4.id, tech_skill_id: @t_2.id)
+UserTechSkill.create(user_id: @u_4.id, tech_skill_id: @t_3.id)
+
+UserNonTechSkill.create(user_id: @u_1.id, non_tech_skill_id: @nt_1.id)
+UserNonTechSkill.create(user_id: @u_2.id, non_tech_skill_id: @nt_2.id)
+UserNonTechSkill.create(user_id: @u_3.id, non_tech_skill_id: @nt_3.id)
+UserNonTechSkill.create(user_id: @u_4.id, non_tech_skill_id: @nt_1.id)
+UserNonTechSkill.create(user_id: @u_4.id, non_tech_skill_id: @nt_3.id)
 
 Availability.create!(day_of_week: 0, morning: false, afternoon: false, evening: true, user: @u_1)
 Availability.create(day_of_week: 0, morning: true, afternoon: false, evening: false, user: @u_2)
 Availability.create(day_of_week: 0, morning: false, afternoon: true, evening: false, user: @u_3)
+Availability.create(day_of_week: 0, morning: false, afternoon: true, evening: true, user: @u_4)
+
+ContactDetails.create(email: 't@mail.com', slack: 's1', phone: 'p1', user: @u_1)
+ContactDetails.create(email: 'tv@mail.com', slack: 's2', phone: 'p2', user: @u_2)
+ContactDetails.create(email: 'jor@mail.com', slack: 's3', phone: 'p3', user: @u_3)
+ContactDetails.create(email: 'j@mail.com', slack: 's4', phone: 'p4', user: @u_4)
