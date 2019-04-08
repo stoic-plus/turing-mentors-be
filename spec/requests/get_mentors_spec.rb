@@ -4,6 +4,7 @@ describe 'GET /mentors', type: :request do
   before :each do
     @t_1 = TechSkill.create(title: 'javascript')
     @t_2 = TechSkill.create(title: 'ruby')
+    @t_3 = TechSkill.create(title: 'python')
     User.destroy_all
     @u_1 = User.create(first_name: 'Travis', last_name: ' Gee', cohort: 1810, program: 'FE', current_job: 'google', background: 'IT', mentor: true, location: 'Denver, CO')
     UserTechSkill.create(user_id: @u_1.id, tech_skill_id: @t_2.id)
@@ -20,6 +21,10 @@ describe 'GET /mentors', type: :request do
     @u_4 = User.create(first_name: 'J', last_name: 'J', cohort: 1810, program: 'FE', current_job: 'google', background: 'IT', mentor: true, location: 'Denver, CO')
     UserTechSkill.create(user_id: @u_4.id, tech_skill_id: @t_1.id)
     ContactDetails.create(email: 't@mail.com', slack: 's1', phone: 'p1', user: @u_4)
+
+    @u_5 = User.create(first_name: 'JJ', last_name: 'JJJ', cohort: 1811, program: 'BE', current_job: 'google', background: 'IT', mentor: true, location: 'Raleigh, NC')
+    UserTechSkill.create(user_id: @u_5.id, tech_skill_id: @t_3.id)
+    ContactDetails.create(email: 't@mail.com', slack: 's1', phone: 'p1', user: @u_5)
   end
 
     context 'passing location:all as params' do
@@ -32,7 +37,7 @@ describe 'GET /mentors', type: :request do
 
         mentor_json = JSON.parse(response.body)["data"]
 
-        expect(mentor_json.size).to eq(4)
+        expect(mentor_json.size).to eq(5)
 
         mentor_json.each do |json|
           expect(json).to have_key("id")
@@ -76,10 +81,10 @@ describe 'GET /mentors', type: :request do
 
         mentor_json = JSON.parse(response.body)["data"]
 
-        expect(mentor_json.size).to eq(2)
+        expect(mentor_json.size).to eq(3)
 
         mentor_json.each do |json|
-          expect(json["attributes"]["location"]).to eq("New York, NY")
+          expect(json["attributes"]["location"]).to_not eq("Denver, CO")
           expect(json["attributes"]["mentor"]).to be_truthy
         end
       end
@@ -183,6 +188,23 @@ describe 'GET /mentors', type: :request do
         mentor_json.each do |json|
           expect(json["attributes"]["mentor"]).to be_truthy
           expect(json["attributes"]["tech_skills"]).to eq(["ruby"])
+        end
+      end
+    end
+    context "passing location='all', tech_skills='ruby,python' as params" do
+      it 'returns mentors users in and out of denver who have ruby or python as tech skill' do
+        get '/api/v1/mentors', params: { location: 'all', tech_skills: 'ruby,python' }
+
+        expect(response).to be_successful
+        expect(response.content_type).to eq("application/json")
+        expect(response.status).to eq(200)
+
+        mentor_json = JSON.parse(response.body)["data"]
+
+        expect(mentor_json.size).to eq(3)
+        mentor_json.each do |json|
+          expect(json["attributes"]["mentor"]).to be_truthy
+          expect(json["attributes"]["tech_skills"]).to_not include("javascript")
         end
       end
     end
