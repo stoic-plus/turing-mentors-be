@@ -102,7 +102,7 @@ describe User, type: :model do
   end
 
   describe 'instance methods' do
-    context '#tech_skills' do
+    context '#list_skills(:tech)' do
       it 'returns array of tech_skills this user has' do
         t_3 = TechSkill.create(title: 'Elixir')
         t_4 = TechSkill.create(title: 'Java')
@@ -111,7 +111,7 @@ describe User, type: :model do
         UserTechSkill.create(user_id: user.id, tech_skill_id: t_3.id)
         UserTechSkill.create(user_id: user.id, tech_skill_id: t_4.id)
 
-        actual = user.list_tech_skills
+        actual = user.list_skills(:tech)
         expected = ['Elixir', 'Java']
 
         expect(actual).to eq(expected)
