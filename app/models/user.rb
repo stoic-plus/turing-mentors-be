@@ -19,8 +19,12 @@ class User < ApplicationRecord
   has_many :user_non_tech_skills
   has_many :non_tech_skills, through: :user_non_tech_skills
 
-  def list_tech_skills
-    UserTechSkill.joins(:tech_skill).where(user_id: self.id).pluck("tech_skills.title")
+  def list_skills(type)
+    if type === :tech
+      list_tech_skills
+    else
+      list_non_tech_skills
+    end
   end
 
   def list_availability
@@ -48,5 +52,15 @@ class User < ApplicationRecord
     return User.mentors if location_param == "all"
     return User.denver_mentors if location_param == "denver"
     return User.remote_mentors if location_param == "remote"
+  end
+
+  private
+
+  def list_tech_skills
+    UserTechSkill.joins(:tech_skill).where(user_id: self.id).pluck("tech_skills.title")
+  end
+
+  def list_non_tech_skills
+    UserNonTechSkill.joins(:non_tech_skill).where(user_id: self.id).pluck("non_tech_skills.title")
   end
 end
