@@ -10,18 +10,21 @@ class Api::V1::MentorsController < ApplicationController
   def create
     mentor_attributes = mentor_params
     user_params = {
-      first_name: mentor_attributes[:firstName],
-      last_name: mentor_attributes[:lastName],
+      first_name: mentor_attributes[:first_name],
+      last_name: mentor_attributes[:last_name],
+      current_job: mentor_attributes[:current_job],
       cohort: mentor_attributes[:cohort],
       program: mentor_attributes[:program],
-      background: mentor_attributes[:background]
+      background: mentor_attributes[:background],
+      mentor: true
     }
     mentor = User.new(user_params)
     if mentor.save
       contact_info = {
         email: mentor_attributes[:email],
         slack: mentor_attributes[:slack],
-        phone: mentor_attributes[:phone]
+        phone: mentor_attributes[:phone],
+        user: mentor
       }
       ContactDetails.create(contact_info)
       identities = Identity.where(id: mentor_attributes[:identities].map(&:to_i))
@@ -29,8 +32,14 @@ class Api::V1::MentorsController < ApplicationController
         mentor.identities << identity
       end
       mentor_attributes[:availability].each do |day, time_of_day|
-        morning, afternoon, evening = time_of_day
-        mentor.availabilities << Availability.create!(
+        if time_of_day.class == Array
+          morning, afternoon, evening = time_of_day
+        else
+          morning = time_of_day
+          afternoon = time_of_day
+          evening = time_of_day
+        end
+        mentor.availabilities << Availability.create(
           day_of_week: day,
           morning: morning,
           afternoon: afternoon,
@@ -38,7 +47,6 @@ class Api::V1::MentorsController < ApplicationController
           user: mentor
         )
       end
-      binding.pry
       render json: UserSerializer.new(mentor), status: 200
     else
       render json: { message: "incorrect user information supplied"}, status: 400
@@ -52,22 +60,15 @@ class Api::V1::MentorsController < ApplicationController
     :background,
     :cohort,
     :program,
+    :current_job,
     :email,
-    :firstName,
-    :lastName,
+    :first_name,
+    :last_name,
     :phone,
     :slack,
     :tech_skills => [],
     :identities => [],
-    :availability => {
-      "0": [],
-      "1": [],
-      "2": [],
-      "3": [],
-      "4": [],
-      "5": [],
-      "6": [],
-    }
+    :availability => {}
   )
   end
 end
