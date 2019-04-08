@@ -2,7 +2,10 @@ class UserSerializer
   include FastJsonapi::ObjectSerializer
   attributes :first_name, :last_name, :cohort, :program, :current_job, :background, :mentor, :location
   attribute :tech_skills do |user|
-    user.list_tech_skills
+    user.list_skills(:tech)
+  end
+  attribute :non_tech_skills do |user|
+    user.list_skills(:non_tech)
   end
   attribute :availability do |user|
     user.list_availability
