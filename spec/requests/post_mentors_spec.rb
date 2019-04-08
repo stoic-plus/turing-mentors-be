@@ -46,21 +46,20 @@ describe 'POST /mentors', type: :request do
       expect(created_user["background"]).to eq(@user[:background])
       expect(created_user["mentor"]).to be_truthy
       expect(created_user["tech_skills"]).to eq(tech_skills)
-      binding.pry
       expect(created_user["identities"]).to eq(identities)
       expect(created_user["contact_details"]).to eq({
-        email: @user[:email],
-        phone: @user[:phone],
-        slack: @user[:slack]
+        "email" => @user[:email],
+        "phone" => @user[:phone],
+        "slack" => @user[:slack]
       })
       expect(created_user["availability"]).to eq({
-        0 => @user[0],
-        1 => @user[1],
-        2 => @user[2],
-        3 => @user[3],
-        4 => @user[4],
-        5 => @user[5],
-        6 => @user[6]
+        "0" => @user[:availability][0],
+        "1" => [true,true,true],
+        "2" => @user[:availability][2],
+        "3" => @user[:availability][3],
+        "4" => @user[:availability][4],
+        "5" => @user[:availability][5],
+        "6" => @user[:availability][6]
       })
       expect(response).to be_successful
     end
