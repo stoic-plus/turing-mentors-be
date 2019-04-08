@@ -31,6 +31,14 @@ class Api::V1::MentorsController < ApplicationController
       identities.each do |identity|
         mentor.identities << identity
       end
+      tech_skills = TechSkill.where(id: mentor_attributes[:tech_skills].map(&:to_i))
+      tech_skills.each do |tech_skill|
+        mentor.tech_skills << tech_skill
+      end
+      non_tech_skills = NonTechSkill.where(id: mentor_attributes[:non_tech_skills].map(&:to_i))
+      non_tech_skills.each do |non_tech_skill|
+        mentor.non_tech_skills << non_tech_skill
+      end
       mentor_attributes[:availability].each do |day, time_of_day|
         if time_of_day.class == Array
           morning, afternoon, evening = time_of_day
@@ -67,6 +75,7 @@ class Api::V1::MentorsController < ApplicationController
     :phone,
     :slack,
     :tech_skills => [],
+    :non_tech_skills => [],
     :identities => [],
     :availability => {}
   )
