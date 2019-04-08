@@ -3,7 +3,7 @@ class User < ApplicationRecord
   scope :denver_mentors, -> { mentors.where(location: "Denver, CO") }
   scope :remote_mentors, -> { mentors.where("location != 'Denver, CO'") }
   scope :and_tech_skills, -> { joins(:tech_skills) }
-  scope :tech_skilled_in, ->(languages) { and_tech_skills.where("tech_skills.title": languages) }
+  scope :tech_skilled_in, ->(languages) { and_tech_skills.where("tech_skills.title": languages).uniq }
 
   validates_presence_of :first_name,
                         :last_name,
