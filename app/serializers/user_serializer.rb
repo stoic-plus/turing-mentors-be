@@ -10,4 +10,7 @@ class UserSerializer
   attribute :identities do |user|
     user.list_identities
   end
+  attribute :contact_details do |user|
+    user.list_contact_details
+  end
 end
