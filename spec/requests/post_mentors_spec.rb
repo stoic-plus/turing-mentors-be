@@ -70,6 +70,7 @@ describe 'POST /mentors', type: :request do
         "6" => @user[:availability][6]
       })
       expect(response).to be_successful
+      expect(response.status).to eq(200)
     end
 
     xit 'creates neccesary rows in supporting tables for the created user' do
@@ -82,6 +83,24 @@ describe 'POST /mentors', type: :request do
       expect(UserNonTechSkill.count).to eq(3)
       expect(UserIdentity.count).to eq(1)
       expect(Availability.count).to eq(7)
+    end
+
+    it 'returns error if not all user params are sent' do
+      user = {
+        background: "...",
+        cohort: 1810,
+        program: "BE",
+        current_job: "Ibotta",
+        email: "j@mail.com",
+        first_name: "j",
+        tech_skills: [1, 2, 4]
+      }
+
+      post '/api/v1/mentors', params: user
+
+      expect(response.status).to eq(400)
+      expect(response).to_not be_successful
+      expect(JSON.parse(response.body)).to eq({"message" => "incorrect user information supplied"})
     end
   end
 end
