@@ -3,6 +3,13 @@ require 'rails_helper'
 describe 'POST /mentors', type: :request do
   before :each do
     Identity.create(title: 'male')
+    TechSkill.create(title: 'ruby')
+    TechSkill.create(title: 'javascript')
+    TechSkill.create(title: 'python')
+    TechSkill.create(title: 'java')
+    NonTechSkill.create(title: 'stress management')
+    NonTechSkill.create(title: 'public speaking')
+    NonTechSkill.create(title: 'resumes')
     @user = {
       background: "...",
       cohort: 1810,
@@ -11,6 +18,7 @@ describe 'POST /mentors', type: :request do
       email: "j@mail.com",
       first_name: "j",
       tech_skills: [0, 1, 3],
+      non_tech_skills: [0, 1, 2],
       identities: [1],
       last_name: "l",
       phone: "720",
@@ -24,7 +32,6 @@ describe 'POST /mentors', type: :request do
         5 => [true, false, true],
         6 => [true, false, false]
       }
-
     }
   end
 
@@ -33,7 +40,6 @@ describe 'POST /mentors', type: :request do
       expect(User.count).to eq(0)
       post '/api/v1/mentors', params: @user
 
-      expect(User.count).to eq(1)
       tech_skills = TechSkill.where(id: @user[:tech_skills]).pluck(:title)
       identities = Identity.where(id: @user[:identities]).pluck(:title)
       created_user = JSON.parse(response.body)["data"]["attributes"]
@@ -62,6 +68,18 @@ describe 'POST /mentors', type: :request do
         "6" => @user[:availability][6]
       })
       expect(response).to be_successful
+    end
+
+    it 'creates neccesary rows in supporting tables for the created user' do
+      expect(User.count).to eq(0)
+      post '/api/v1/mentors', params: @user
+
+      expect(User.count).to eq(1)
+      expect(ContactDetails.count).to eq(1)
+      expect(UserTechSkill.count).to eq(3)
+      expect(UserNonTechSkill.count).to eq(3)
+      expect(UserIdentity.count).to eq(1)
+      expect(Availability.count).to eq(7)
     end
   end
 end
