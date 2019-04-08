@@ -10,15 +10,16 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_04_02_232520) do
+ActiveRecord::Schema.define(version: 2019_04_06_201059) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
   create_table "availabilities", force: :cascade do |t|
     t.integer "day_of_week"
-    t.time "start"
-    t.time "end"
+    t.boolean "morning"
+    t.boolean "afternoon"
+    t.boolean "evening"
     t.bigint "user_id"
     t.index ["user_id"], name: "index_availabilities_on_user_id"
   end
@@ -28,7 +29,7 @@ ActiveRecord::Schema.define(version: 2019_04_02_232520) do
     t.string "slack"
     t.string "linkedin"
     t.string "phone"
-    t.integer "preferred_method"
+    t.integer "preferred_method", default: 1
     t.bigint "user_id"
     t.index ["user_id"], name: "index_contact_details_on_user_id"
   end
@@ -47,8 +48,8 @@ ActiveRecord::Schema.define(version: 2019_04_02_232520) do
 
   create_table "user_identities", force: :cascade do |t|
     t.bigint "user_id"
-    t.bigint "identities_id"
-    t.index ["identities_id"], name: "index_user_identities_on_identities_id"
+    t.bigint "identity_id"
+    t.index ["identity_id"], name: "index_user_identities_on_identity_id"
     t.index ["user_id"], name: "index_user_identities_on_user_id"
   end
 
@@ -67,13 +68,14 @@ ActiveRecord::Schema.define(version: 2019_04_02_232520) do
   end
 
   create_table "users", force: :cascade do |t|
-    t.string "name"
+    t.string "first_name"
+    t.string "last_name"
     t.integer "cohort"
     t.boolean "active", default: true
     t.string "program"
-    t.string "current_job"
+    t.string "current_job", default: "student"
     t.text "background"
-    t.string "location"
+    t.string "location", default: "Denver, CO"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.boolean "mentor", default: false
@@ -81,7 +83,7 @@ ActiveRecord::Schema.define(version: 2019_04_02_232520) do
 
   add_foreign_key "availabilities", "users"
   add_foreign_key "contact_details", "users"
-  add_foreign_key "user_identities", "identities", column: "identities_id"
+  add_foreign_key "user_identities", "identities"
   add_foreign_key "user_identities", "users"
   add_foreign_key "user_non_tech_skills", "non_tech_skills"
   add_foreign_key "user_non_tech_skills", "users"

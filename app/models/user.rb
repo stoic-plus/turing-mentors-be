@@ -5,12 +5,13 @@ class User < ApplicationRecord
   scope :and_tech_skills, -> { joins(:tech_skills) }
   scope :tech_skilled_in, ->(languages) { and_tech_skills.where("tech_skills.title": languages) }
 
-  validates_presence_of :name,
+  validates_presence_of :first_name,
+                        :last_name,
                         :current_job,
-                        :active,
                         :background,
                         :location
   has_one :contact_details
+  has_many :availabilities
   has_many :user_identities
   has_many :identities, through: :user_identities
   has_many :user_tech_skills
@@ -18,13 +19,48 @@ class User < ApplicationRecord
   has_many :user_non_tech_skills
   has_many :non_tech_skills, through: :user_non_tech_skills
 
-  def list_tech_skills
-    UserTechSkill.joins(:tech_skill).where(user_id: self.id).pluck("tech_skills.title")
+  def list_skills(type)
+    if type === :tech
+      list_tech_skills
+    else
+      list_non_tech_skills
+    end
+  end
+
+  def list_availability
+    Availability.where(user: self).pluck(:day_of_week, :morning, :afternoon, :evening)
+      .reduce({}) do |availability, day_of_week|
+        availability[day_of_week[0]] = day_of_week.slice(1, 4)
+        availability
+      end
+  end
+
+  def list_identities
+    UserIdentity.joins(:identity).where("user_identities.user_id = ?", self.id).pluck(:title)
+  end
+
+  def list_contact_details
+    contact_details = self.contact_details
+    return {
+      email: contact_details.email,
+      slack: contact_details.slack,
+      phone: contact_details.phone
+    }
   end
 
   def self.get_mentors_by_location(location_param)
     return User.mentors if location_param == "all"
     return User.denver_mentors if location_param == "denver"
     return User.remote_mentors if location_param == "remote"
+  end
+
+  private
+
+  def list_tech_skills
+    UserTechSkill.joins(:tech_skill).where(user_id: self.id).pluck("tech_skills.title")
+  end
+
+  def list_non_tech_skills
+    UserNonTechSkill.joins(:non_tech_skill).where(user_id: self.id).pluck("non_tech_skills.title")
   end
 end
