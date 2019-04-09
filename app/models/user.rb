@@ -48,10 +48,38 @@ class User < ApplicationRecord
     }
   end
 
+  def self.get_mentors_by_location_and_tech_skills(params)
+    mentors = self.get_mentors_by_location(params["location"])
+    mentors = mentors.tech_skilled_in(params["tech_skills"].split(",")) if params["tech_skills"]
+    mentors
+  end
+
   def self.get_mentors_by_location(location_param)
     return User.mentors if location_param == "all"
     return User.denver_mentors if location_param == "denver"
     return User.remote_mentors if location_param == "remote"
+  end
+
+  def self.new_mentor(attributes)
+    mentor_attributes = {
+      first_name: attributes[:first_name],
+      last_name: attributes[:last_name],
+      location: attributes[:location],
+      current_job: attributes[:current_job],
+      cohort: attributes[:cohort],
+      program: attributes[:program],
+      background: attributes[:background],
+      mentor: true
+    }
+    new(mentor_attributes)
+  end
+
+  def self.create_mentor_info(mentor_params, mentor)
+    ContactDetails.for_user(mentor_params, mentor)
+    UserIdentity.for_user(mentor_params[:identities].map(&:to_i), mentor)
+    UserTechSkill.for_user(mentor_params[:tech_skills].map(&:to_i), mentor)
+    UserNonTechSkill.for_user(mentor_params[:non_tech_skills].map(&:to_i), mentor)
+    Availability.for_user(mentor_params[:availability], mentor)
   end
 
   private

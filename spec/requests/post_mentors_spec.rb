@@ -15,6 +15,7 @@ describe 'POST /mentors', type: :request do
       cohort: 1810,
       program: "BE",
       current_job: "Ibotta",
+      location: 'TAHITI',
       email: "j@mail.com",
       first_name: "j",
       tech_skills: [1, 2, 4],
@@ -51,6 +52,7 @@ describe 'POST /mentors', type: :request do
       expect(created_user["program"]).to eq(@user[:program])
       expect(created_user).to have_key("current_job")
       expect(created_user["background"]).to eq(@user[:background])
+      expect(created_user["location"]).to eq(@user[:location])
       expect(created_user["mentor"]).to be_truthy
       expect(created_user["tech_skills"]).to eq(tech_skills)
       expect(created_user["non_tech_skills"]).to eq(non_tech_skills)
