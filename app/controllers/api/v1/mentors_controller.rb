@@ -22,10 +22,7 @@ class Api::V1::MentorsController < ApplicationController
     if mentor.save
       ContactDetails.for_user(mentor_attributes, mentor)
       UserIdentity.for_user(mentor_attributes[:identities].map(&:to_i), mentor)
-      tech_skills = TechSkill.where(id: mentor_attributes[:tech_skills].map(&:to_i))
-      tech_skills.each do |tech_skill|
-        mentor.tech_skills << tech_skill
-      end
+      UserTechSkill.for_user(mentor_attributes[:tech_skills].map(&:to_i), mentor)
       non_tech_skills = NonTechSkill.where(id: mentor_attributes[:non_tech_skills].map(&:to_i))
       non_tech_skills.each do |non_tech_skill|
         mentor.non_tech_skills << non_tech_skill
