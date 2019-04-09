@@ -54,6 +54,20 @@ class User < ApplicationRecord
     return User.remote_mentors if location_param == "remote"
   end
 
+  def self.new_mentor(attributes)
+    mentor_attributes = {
+      first_name: attributes[:first_name],
+      last_name: attributes[:last_name],
+      location: attributes[:location],
+      current_job: attributes[:current_job],
+      cohort: attributes[:cohort],
+      program: attributes[:program],
+      background: attributes[:background],
+      mentor: true
+    }
+    new(mentor_attributes)
+  end
+
   private
 
   def list_tech_skills
