@@ -101,6 +101,32 @@ describe User, type: :model do
     end
   end
 
+  describe 'class methods' do
+    context 'new_mentor' do
+      it 'creates a mentor user (using new not create) given hash of attributes' do
+        mentor_attr = {
+          first_name: 'first',
+          last_name: 'last',
+          location: 'TAHITI',
+          current_job: 'google',
+          cohort: 1810,
+          program: 'BE',
+          background: 'add it here'
+        }
+        mentor = User.new_mentor(mentor_attr)
+
+        expect(mentor.mentor).to be_truthy
+        expect(mentor.first_name).to eq(mentor_attr[:first_name])
+        expect(mentor.last_name).to eq(mentor_attr[:last_name])
+        expect(mentor.location).to eq(mentor_attr[:location])
+        expect(mentor.current_job).to eq(mentor_attr[:current_job])
+        expect(mentor.cohort).to eq(mentor_attr[:cohort])
+        expect(mentor.program).to eq(mentor_attr[:program])
+        expect(mentor.background).to eq(mentor_attr[:background])
+      end
+    end
+  end
+
   describe 'instance methods' do
     context '#list_skills(:tech)' do
       it 'returns array of tech_skills this user has' do

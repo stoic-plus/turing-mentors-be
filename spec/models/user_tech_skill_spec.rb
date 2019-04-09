@@ -3,7 +3,7 @@ require 'rails_helper'
 describe UserTechSkill, type: :model do
   describe 'class methods' do
     context 'for_user' do
-      it 'creates tech skills for a user given array of tech_skill id\'s and a user' do
+      xit 'creates tech skills for a user given array of tech_skill id\'s and a user' do
         ts_1 = TechSkill.create(title: 'js')
         ts_2 = TechSkill.create(title: 'ruby')
         ts_3 = TechSkill.create(title: 'machine learning')
