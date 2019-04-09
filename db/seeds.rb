@@ -7,20 +7,28 @@ TechSkill.destroy_all
 UserIdentity.destroy_all
 UserNonTechSkill.destroy_all
 UserTechSkill.destroy_all
-#
-# i_1 = Identity.create(title: 'male')
-# i_2 = Identity.create(title: 'female')
-# i_3 = Identity.create(title: 'non-binary')
-#
-# @t_1 = TechSkill.create(title: 'ruby')
-# @t_2 = TechSkill.create(title: 'javascript')
-# @t_3 = TechSkill.create(title: 'python')
-# @t_4 = TechSkill.create(title: 'java')
-#
-# @nt_1 = NonTechSkill.create(title: 'stress management')
-# @nt_2 = NonTechSkill.create(title: 'public speaking')
-# @nt_3 = NonTechSkill.create(title: 'resumes')
-#
+
+i_1 = Identity.create(title: 'male')
+i_2 = Identity.create(title: 'female')
+i_3 = Identity.create(title: 'non-binary')
+
+@t_1 = TechSkill.create(title: 'ruby')
+@t_2 = TechSkill.create(title: 'javascript')
+@t_3 = TechSkill.create(title: 'python')
+@t_4 = TechSkill.create(title: 'java')
+@t_5 = TechSkill.create(title: 'elixir')
+@t_6 = TechSkill.create(title: 'c')
+@t_7 = TechSkill.create(title: 'php')
+@t_8 = TechSkill.create(title: 'swift')
+@t_9 = TechSkill.create(title: 'sql')
+
+@nt_1 = NonTechSkill.create(title: 'stress management')
+@nt_2 = NonTechSkill.create(title: 'public speaking')
+@nt_3 = NonTechSkill.create(title: 'resumes')
+@nt_4 = NonTechSkill.create(title: 'technical interviews')
+@nt_5 = NonTechSkill.create(title: 'parenting')
+@nt_6 = NonTechSkill.create(title: 'wellness')
+
 #
 # @u_1 = User.create(first_name: 'Travy', last_name: 'Gee', cohort: 1810, program: 'FE', current_job: 'google', background: 'IT', mentor: true, location: 'Denver, CO')
 # @u_2 = User.create(first_name: 'Bob', last_name: 'Gee', cohort: 1810, program: 'FE', current_job: 'google', background: 'IT', mentor: true, location: 'New York, CO')
@@ -49,7 +57,7 @@ UserTechSkill.destroy_all
 # Availability.create(day_of_week: 0, morning: true, afternoon: false, evening: false, user: @u_2)
 # Availability.create(day_of_week: 0, morning: false, afternoon: true, evening: false, user: @u_3)
 # Availability.create(day_of_week: 0, morning: false, afternoon: true, evening: true, user: @u_4)
-#
+
 # ContactDetails.create(email: 't@mail.com', slack: 's1', phone: 'p1', user: @u_1)
 # ContactDetails.create(email: 'tv@mail.com', slack: 's2', phone: 'p2', user: @u_2)
 # ContactDetails.create(email: 'jor@mail.com', slack: 's3', phone: 'p3', user: @u_3)
