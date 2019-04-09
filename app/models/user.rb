@@ -68,6 +68,14 @@ class User < ApplicationRecord
     new(mentor_attributes)
   end
 
+  def self.create_mentor_info(mentor_params, mentor)
+    ContactDetails.for_user(mentor_params, mentor)
+    UserIdentity.for_user(mentor_params[:identities].map(&:to_i), mentor)
+    UserTechSkill.for_user(mentor_params[:tech_skills].map(&:to_i), mentor)
+    UserNonTechSkill.for_user(mentor_params[:non_tech_skills].map(&:to_i), mentor)
+    Availability.for_user(mentor_params[:availability], mentor)
+  end
+
   private
 
   def list_tech_skills

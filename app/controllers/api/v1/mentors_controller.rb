@@ -10,11 +10,7 @@ class Api::V1::MentorsController < ApplicationController
   def create
     mentor = User.new_mentor(mentor_params)
     if mentor.save
-      ContactDetails.for_user(mentor_params, mentor)
-      UserIdentity.for_user(mentor_params[:identities].map(&:to_i), mentor)
-      UserTechSkill.for_user(mentor_params[:tech_skills].map(&:to_i), mentor)
-      UserNonTechSkill.for_user(mentor_params[:non_tech_skills].map(&:to_i), mentor)
-      Availability.for_user(mentor_params[:availability], mentor)
+      User.create_mentor_info(mentor_params, mentor)
       render json: UserSerializer.new(mentor), status: 200
     else
       render json: { message: "incorrect user information supplied"}, status: 400
