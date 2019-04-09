@@ -23,26 +23,8 @@ class Api::V1::MentorsController < ApplicationController
       ContactDetails.for_user(mentor_attributes, mentor)
       UserIdentity.for_user(mentor_attributes[:identities].map(&:to_i), mentor)
       UserTechSkill.for_user(mentor_attributes[:tech_skills].map(&:to_i), mentor)
-      non_tech_skills = NonTechSkill.where(id: mentor_attributes[:non_tech_skills].map(&:to_i))
-      non_tech_skills.each do |non_tech_skill|
-        mentor.non_tech_skills << non_tech_skill
-      end
-      mentor_attributes[:availability].each do |day, time_of_day|
-        if time_of_day.class == Array
-          morning, afternoon, evening = time_of_day
-        else
-          morning = time_of_day
-          afternoon = time_of_day
-          evening = time_of_day
-        end
-        mentor.availabilities << Availability.create(
-          day_of_week: day,
-          morning: morning,
-          afternoon: afternoon,
-          evening: evening,
-          user: mentor
-        )
-      end
+      UserNonTechSkill.for_user(mentor_attributes[:non_tech_skills].map(&:to_i), mentor)
+      Availability.for_user(mentor_attributes[:availability], mentor)
       render json: UserSerializer.new(mentor), status: 200
     else
       render json: { message: "incorrect user information supplied"}, status: 400
