@@ -15,7 +15,7 @@ describe ContactDetails, type: :model do
           phone: '720',
         }
         contact = ContactDetails.for_user(contact_info, user)
-        expect(contact).to be_a(ContactDetail)
+        expect(contact).to be_a(ContactDetails)
         expect(contact.email).to eq(contact_info[:email])
         expect(contact.slack).to eq(contact_info[:slack])
         expect(contact.phone).to eq(contact_info[:phone])
