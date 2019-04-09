@@ -17,20 +17,20 @@ describe Availability, type: :model do
       it 'creates availability for user given hash of day of week (int) keys and time of day values ([false, true, false]) and a user' do
         user = User.create(first_name: 'Travis', last_name: ' Gee', cohort: 1810, program: 'FE', current_job: 'google', background: 'IT', mentor: true, location: 'Denver, CO')
         user_availability = {
-         "0": [false,true,false],
-         "1": [false,false,false],
-         "2": [false,true,false],
-         "3": [false,false,false],
-         "4": [false,false,false],
-         "5": [false,false,false],
-         "6": [false,false,false]
+         "0" => [false,true,false],
+         "1" => [false,true,true],
+         "2" => [false,true,false],
+         "3" => [false,false,false],
+         "4" => [true,false,false],
+         "5" => [false,true,false],
+         "6" => [false,false,true]
         }
-        Availability.for_user(availability, user)
-
+        Availability.for_user(user_availability, user)
         expect(user.availabilities.count).to eq(7)
-        user.availabilities.each_with_index do |availability|
-          binding.pry
-          expect(availability.morning).to eq()
+        user.availabilities.each_with_index do |availability, index|
+          expect(availability.morning).to eq(user_availability[index.to_s].first)
+          expect(availability.afternoon).to eq(user_availability[index.to_s].second)
+          expect(availability.evening).to eq(user_availability[index.to_s].third)
         end
       end
     end
