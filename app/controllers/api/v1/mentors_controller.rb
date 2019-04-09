@@ -1,9 +1,6 @@
 class Api::V1::MentorsController < ApplicationController
   def index
-    mentors = User.get_mentors_by_location(params["location"])
-    if params["tech_skills"]
-      mentors = mentors.tech_skilled_in(params["tech_skills"].split(","))
-    end
+    mentors = User.get_mentors_by_location_and_tech_skills(params)
     render json: UserSerializer.new(mentors), status: 200
   end
 

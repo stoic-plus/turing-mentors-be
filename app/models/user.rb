@@ -48,6 +48,12 @@ class User < ApplicationRecord
     }
   end
 
+  def self.get_mentors_by_location_and_tech_skills(params)
+    mentors = self.get_mentors_by_location(params["location"])
+    mentors = mentors.tech_skilled_in(params["tech_skills"].split(",")) if params["tech_skills"]
+    mentors
+  end
+
   def self.get_mentors_by_location(location_param)
     return User.mentors if location_param == "all"
     return User.denver_mentors if location_param == "denver"
