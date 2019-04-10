@@ -86,6 +86,12 @@ class User < ApplicationRecord
     new(mentor_attributes)
   end
 
+  def self.create_mentee_info(mentee_params, mentee)
+    ContactDetails.for_user(mentee_params, mentee)
+    UserIdentity.for_user(mentee_params[:identities].map(&:to_i), mentee)
+    Availability.for_user(mentee_params[:availability], mentee)
+  end
+
   def self.create_mentor_info(mentor_params, mentor)
     ContactDetails.for_user(mentor_params, mentor)
     UserIdentity.for_user(mentor_params[:identities].map(&:to_i), mentor)
