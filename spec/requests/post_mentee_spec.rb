@@ -65,7 +65,7 @@ describe 'POST /mentees', type: :request do
 
       expect(User.count).to eq(1)
       expect(ContactDetails.count).to eq(1)
-      expect(UserIdentity.count).to eq(1)
+      expect(UserIdentity.count).to eq(3)
       expect(Availability.count).to eq(7)
     end
 
