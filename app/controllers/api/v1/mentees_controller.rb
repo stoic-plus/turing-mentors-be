@@ -1,7 +1,7 @@
-class Api::V1::MentorsController < ApplicationController
+class Api::V1::MenteesController < ApplicationController
   def create
     mentee = User.new_mentee(mentee_params)
-    if mentor.save
+    if mentee.save
       User.create_mentee_info(mentee_params, mentee)
       render json: MenteeSerializer.new(mentee), status: 200
     else
