@@ -30,18 +30,15 @@ describe 'POST /mentees', type: :request do
   context 'passing all neccesary attributes' do
     it 'returns the created mentee' do
       expect(User.count).to eq(0)
-      post '/api/v1/mentee', params: @user
+      post '/api/v1/mentees', params: @user
 
       identities = Identity.where(id: @user[:identities]).pluck(:title)
       created_user = JSON.parse(response.body)["data"]["attributes"]
-
       expect(created_user["first_name"]).to eq(@user[:first_name])
       expect(created_user["last_name"]).to eq(@user[:last_name])
       expect(created_user["cohort"]).to eq(@user[:cohort])
       expect(created_user["program"]).to eq(@user[:program])
-      expect(created_user["current_job"]).to eq("student")
       expect(created_user["background"]).to eq(@user[:background])
-      expect(created_user["location"]).to eq("Denver, CO")
       expect(created_user["mentor"]).to be_falsey
       expect(created_user["identities"]).to eq(identities)
       expect(created_user["contact_details"]).to eq({
@@ -64,7 +61,7 @@ describe 'POST /mentees', type: :request do
 
     xit 'creates neccesary rows in supporting tables for the created user' do
       expect(User.count).to eq(0)
-      post '/api/v1/mentors', params: @user
+      post '/api/v1/mentees', params: @user
 
       expect(User.count).to eq(1)
       expect(ContactDetails.count).to eq(1)
