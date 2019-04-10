@@ -60,6 +60,18 @@ class User < ApplicationRecord
     return User.remote_mentors if location_param == "remote"
   end
 
+  def self.new_mentee(attributes)
+    mentee_attributes = {
+      first_name: attributes[:first_name],
+      last_name: attributes[:last_name],
+      cohort: attributes[:cohort],
+      program: attributes[:program],
+      background: attributes[:background],
+      mentor: false
+    }
+    new(mentee_attributes)
+  end
+
   def self.new_mentor(attributes)
     mentor_attributes = {
       first_name: attributes[:first_name],
@@ -72,6 +84,12 @@ class User < ApplicationRecord
       mentor: true
     }
     new(mentor_attributes)
+  end
+
+  def self.create_mentee_info(mentee_params, mentee)
+    ContactDetails.for_user(mentee_params, mentee)
+    UserIdentity.for_user(mentee_params[:identities].map(&:to_i), mentee)
+    Availability.for_user(mentee_params[:availability], mentee)
   end
 
   def self.create_mentor_info(mentor_params, mentor)

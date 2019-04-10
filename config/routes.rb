@@ -3,7 +3,7 @@ Rails.application.routes.draw do
     namespace :v1 do
       get '/mentors', to: 'mentors#index'
       post '/mentors', to: 'mentors#create'
+      post '/mentees', to: 'mentees#create'
     end
   end
 end
- 

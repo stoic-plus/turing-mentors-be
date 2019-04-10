@@ -41,7 +41,7 @@ describe 'GET /mentors', type: :request do
 
         mentor_json.each do |json|
           expect(json).to have_key("id")
-          expect(json["type"]).to eq("user")
+          expect(json["type"]).to eq("mentor")
           expect(json["attributes"]).to have_key("first_name")
           expect(json["attributes"]).to have_key("last_name")
           expect(json["attributes"]).to have_key("cohort")
