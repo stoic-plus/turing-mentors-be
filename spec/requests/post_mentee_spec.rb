@@ -9,7 +9,6 @@ describe 'POST /mentees', type: :request do
       background: "...",
       cohort: 1810,
       program: "BE",
-      location: 'TAHITI',
       email: "j@mail.com",
       first_name: "j",
       identities: [1, 2, 3],
