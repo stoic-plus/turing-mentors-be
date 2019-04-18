@@ -2,26 +2,28 @@ require 'rails_helper'
 
 describe 'PUT /mentees', type: :request do
   before :each do
+    i_1 = Identity.create(title: 'male')
+    i_2 = Identity.create(title: 'parent')
+    i_3 = Identity.create(title: 'pianist')
     @user = User.create(
       background: 'a',
       cohort: 1810,
       program: "BE",
-      email: "mail",
       first_name: "Jordan",
-      identities: [1,2,3],
       last_name: "l",
-      phone: "2",
-      slack: "@slack",
-      availability: {
-        0 => [true, false, true],
-        1 => true,
-        2 => [true, false, false],
-        3 => [true, false, true],
-        4 => [false, false, true],
-        5 => [true, false, true],
-        6 => [true, false, false]
-      }
     )
+    UserIdentity.create(user: @user, identity_id: i_1.id)
+    UserIdentity.create(user: @user, identity_id: i_2.id)
+    UserIdentity.create(user: @user, identity_id: i_3.id)
+
+    @contact = ContactDetails.create(email: "mail",phone:"2",slack:"@slack", user: @user)
+    Availability.create!(day_of_week: 0, morning: false, afternoon: false, evening: true, user: @user)
+    Availability.create(day_of_week: 1, morning: true, afternoon: false, evening: false, user: @user)
+    Availability.create(day_of_week: 2, morning: false, afternoon: true, evening: false, user: @user)
+    Availability.create(day_of_week: 3, morning: false, afternoon: true, evening: true, user: @user)
+    Availability.create(day_of_week: 4, morning: false, afternoon: true, evening: true, user: @user)
+    Availability.create(day_of_week: 5, morning: false, afternoon: true, evening: true, user: @user)
+    Availability.create(day_of_week: 6, morning: false, afternoon: true, evening: true, user: @user)
   end
 
   context 'with valid id and passing some attributes' do
@@ -101,8 +103,22 @@ describe 'PUT /mentees', type: :request do
     end
   end
 
-  context 'with invalid id' do
+  context 'with invalid user id' do
     it 'returns 404 status code' do
+      updated = {
+        phone: "510",
+        slack: "@burgerzBoss",
+        availability: {
+          0 => [false, false, false],
+          1 => false,
+          2 => [false, false, false],
+          3 => [false, false, false],
+          4 => [false, false, false],
+          5 => [false, false, false],
+          6 => [false, false, false]
+        }
+      }
+
       put "/api/v1/mentees/12", params: updated
 
       expect(response).to_not be_successful
