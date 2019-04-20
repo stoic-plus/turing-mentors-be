@@ -1,9 +1,8 @@
 Rails.application.routes.draw do
   namespace :api do
     namespace :v1 do
-      get '/mentors', to: 'mentors#index'
-      post '/mentors', to: 'mentors#create'
-      post '/mentees', to: 'mentees#create'
+      resources :mentors, only: [:index, :create]
+      resources :mentees, only: [:update, :create]
     end
   end
 end
