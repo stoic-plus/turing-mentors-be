@@ -24,4 +24,21 @@ class Availability < ApplicationRecord
       )
     end
   end
+
+  def self.update_for_user(user, updated_availability)
+    updated_availability.each do |day_of_week, availability|
+      new_availability = {day_of_week: day_of_week.to_i}
+      if availability.class == Array
+         [:morning, :afternoon, :evening].each_with_index do |period, index|
+           new_availability[period] = ActiveModel::Type::Boolean.new.cast(availability[index])
+         end
+      else
+         updated = ActiveModel::Type::Boolean.new.cast(availability)
+         [:morning, :afternoon, :evening].each do |period|
+           new_availability[period] = ActiveModel::Type::Boolean.new.cast(updated)
+         end
+      end
+      find_by(user: user.id, day_of_week: day_of_week).update(new_availability)
+    end
+  end
 end
