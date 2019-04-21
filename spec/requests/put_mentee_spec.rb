@@ -20,7 +20,7 @@ describe 'PUT /mentees', type: :request do
     UserIdentity.create(user: @user, identity_id: i_3.id)
 
     @contact = ContactDetails.create(email: "mail",phone:"2",slack:"@slack", user: @user)
-    Availability.create!(day_of_week: 0, morning: false, afternoon: false, evening: true, user: @user)
+    Availability.create(day_of_week: 0, morning: false, afternoon: false, evening: true, user: @user)
     Availability.create(day_of_week: 1, morning: true, afternoon: false, evening: false, user: @user)
     Availability.create(day_of_week: 2, morning: false, afternoon: true, evening: false, user: @user)
     Availability.create(day_of_week: 3, morning: false, afternoon: true, evening: true, user: @user)

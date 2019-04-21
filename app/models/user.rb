@@ -39,6 +39,77 @@ class User < ApplicationRecord
     UserIdentity.joins(:identity).where("user_identities.user_id = ?", self.id).pluck(:title)
   end
 
+  # def update
+  #   mentee = User.find_by(id: params[:id])
+  #   if mentee
+  #     mentee_params.each do |attribute, value|
+  #       next unless value
+  #       if contact_attribute?(attribute)
+  #         update_contact(mentee.id, attribute, value)
+  #       elsif attribute == "availability"
+  #         update_availability(mentee.id, value)
+  #       elsif attribute == "identities"
+  #         current_identities = mentee.identities.pluck(:id)
+  #         value.each do |identity|
+  #           unless current_identities.include?(identity.to_i)
+  #             UserIdentity.create(user_id: mentee.id, identity_id: identity.to_i)
+  #           end
+  #         end
+  #       else
+  #         value = value.to_i if attribute == "cohort"
+  #         mentee.update(attribute.to_sym => value)
+  #       end
+  #     end
+  #     render json: MentorSerializer.new(mentee), status: 200
+  #   else
+  #     render json: {"message" => "mentee not found by that id"}, status: 404
+  #   end
+  # end
+
+  def self.update_mentee(mentee, mentee_params)
+    mentee_params.each do |attribute, value|
+      next unless value
+      if contact_attribute?(attribute)
+        update_contact(mentee.id, attribute, value)
+      elsif attribute == "availability"
+        update_availability(mentee.id, value)
+      elsif attribute == "identities"
+        current_identities = mentee.identities.pluck(:id)
+        value.each do |identity|
+          unless current_identities.include?(identity.to_i)
+            UserIdentity.create(user_id: mentee.id, identity_id: identity.to_i)
+          end
+        end
+      else
+        value = value.to_i if attribute == "cohort"
+        mentee.update(attribute.to_sym => value)
+      end
+    end
+  end
+  # move to ContactDetails
+  def self.update_contact(mentee_id, attribute, value)
+    ContactDetails.find_by(user: mentee_id).update(attribute.to_sym => value)
+  end
+
+  # move to Availability
+  def self.update_availability(mentee_id, value)
+    value.each do |day_of_week, availability|
+      new_availability = {}
+      new_availability[:day_of_week] = day_of_week.to_i
+      if availability.class == Array
+          new_availability[:morning] = ActiveModel::Type::Boolean.new.cast(availability[0])
+          new_availability[:afternoon] = ActiveModel::Type::Boolean.new.cast(availability[1])
+          new_availability[:evening] = ActiveModel::Type::Boolean.new.cast(availability[2])
+      else
+          updated = ActiveModel::Type::Boolean.new.cast(availability)
+          new_availability[:morning] = updated
+          new_availability[:afternoon] = updated
+          new_availability[:evening] = updated
+      end
+      Availability.find_by(user: mentee_id, day_of_week: day_of_week).update(new_availability)
+    end
+  end
+
   def list_contact_details
     contact_details = self.contact_details
     return {
@@ -101,6 +172,13 @@ class User < ApplicationRecord
   end
 
   private
+
+  def self.contact_attribute?(attribute)
+    return true if attribute == "phone"
+    return true if attribute == "slack"
+    return true if attribute == "email"
+    false
+  end
 
   def list_tech_skills
     UserTechSkill.joins(:tech_skill).where(user_id: self.id).pluck("tech_skills.title")
