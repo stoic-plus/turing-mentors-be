@@ -17,7 +17,7 @@ class Api::V1::MenteesController < ApplicationController
         if contact_attribute?(attribute)
           update_contact(mentee.id, attribute, value)
         elsif attribute == "availability"
-          update_availability(mentee.id, attribute, value)
+          update_availability(mentee.id, value)
         elsif attribute == "identities"
           current_identities = mentee.identities.pluck(:id)
           value.each do |identity|
@@ -38,20 +38,21 @@ class Api::V1::MenteesController < ApplicationController
 
   private
 
-  def update_availability(mentee_id, attribute, value)
+  def update_availability(mentee_id, value)
     value.each do |day_of_week, availability|
       new_availability = {}
-      new_availability[:day_of_week] = day_of_week
+      new_availability[:day_of_week] = day_of_week.to_i
       if availability.class == Array
-          new_availability[:morning] = availability[0],
-          new_availability[:afternoon] = availability[1],
-          new_availability[:evening] = availability[2]
+          new_availability[:morning] = ActiveModel::Type::Boolean.new.cast(availability[0])
+          new_availability[:afternoon] = ActiveModel::Type::Boolean.new.cast(availability[1])
+          new_availability[:evening] = ActiveModel::Type::Boolean.new.cast(availability[2])
       else
-          new_availability[:morning] = availability,
-          new_availability[:afternoon] = availability,
-          new_availability[:evening] = availability
+          updated = ActiveModel::Type::Boolean.new.cast(availability)
+          new_availability[:morning] = updated
+          new_availability[:afternoon] = updated
+          new_availability[:evening] = updated
       end
-      Availability.find_by(user: mentee_id).update(new_availability)
+      Availability.find_by(user: mentee_id, day_of_week: day_of_week).update(new_availability)
     end
   end
 
