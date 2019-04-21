@@ -39,49 +39,15 @@ class User < ApplicationRecord
     UserIdentity.joins(:identity).where("user_identities.user_id = ?", self.id).pluck(:title)
   end
 
-  # def update
-  #   mentee = User.find_by(id: params[:id])
-  #   if mentee
-  #     mentee_params.each do |attribute, value|
-  #       next unless value
-  #       if contact_attribute?(attribute)
-  #         update_contact(mentee.id, attribute, value)
-  #       elsif attribute == "availability"
-  #         update_availability(mentee.id, value)
-  #       elsif attribute == "identities"
-  #         current_identities = mentee.identities.pluck(:id)
-  #         value.each do |identity|
-  #           unless current_identities.include?(identity.to_i)
-  #             UserIdentity.create(user_id: mentee.id, identity_id: identity.to_i)
-  #           end
-  #         end
-  #       else
-  #         value = value.to_i if attribute == "cohort"
-  #         mentee.update(attribute.to_sym => value)
-  #       end
-  #     end
-  #     render json: MentorSerializer.new(mentee), status: 200
-  #   else
-  #     render json: {"message" => "mentee not found by that id"}, status: 404
-  #   end
-  # end
-
   def self.update_mentee(mentee, mentee_params)
     mentee_params.each do |attribute, value|
       next unless value
       ContactDetails.update_for_user(mentee, attribute, value) and next if contact_attribute?(attribute)
       Availability.update_for_user(mentee, value) and next if attribute == "availability"
-      if attribute == "identities"
-        current_identities = mentee.identities.pluck(:id)
-        value.each do |identity|
-          unless current_identities.include?(identity.to_i)
-            UserIdentity.create(user_id: mentee.id, identity_id: identity.to_i)
-          end
-        end
-      else
-        value = value.to_i if attribute == "cohort"
-        mentee.update(attribute.to_sym => value)
-      end
+      UserIdentity.update_for_user(mentee, value) and next if attribute == "identities"
+
+      value = value.to_i if attribute == "cohort"
+      mentee.update(attribute.to_sym => value)
     end
   end
 
