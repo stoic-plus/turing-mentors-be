@@ -13,7 +13,7 @@ class Api::V1::MentorsController < ApplicationController
       render json: { message: "incorrect user information supplied"}, status: 400
     end
   end
-
+  
   private
 
   def mentor_params

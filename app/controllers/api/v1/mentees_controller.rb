@@ -9,6 +9,16 @@ class Api::V1::MenteesController < ApplicationController
     end
   end
 
+  def update
+    mentee = User.find_by(id: params[:id])
+    if mentee
+      User.update_mentee(mentee, mentee_params)
+      render json: MentorSerializer.new(mentee), status: 200
+    else
+      render json: {"message" => "mentee not found by that id"}, status: 404
+    end
+  end
+
   private
 
   def mentee_params

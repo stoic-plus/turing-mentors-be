@@ -39,6 +39,18 @@ class User < ApplicationRecord
     UserIdentity.joins(:identity).where("user_identities.user_id = ?", self.id).pluck(:title)
   end
 
+  def self.update_mentee(mentee, mentee_params)
+    mentee_params.each do |attribute, value|
+      next unless value
+      ContactDetails.update_for_user(mentee, attribute, value) and next if contact_attribute?(attribute)
+      Availability.update_for_user(mentee, value) and next if attribute == "availability"
+      UserIdentity.update_for_user(mentee, value) and next if attribute == "identities"
+
+      value = value.to_i if attribute == "cohort"
+      mentee.update(attribute.to_sym => value)
+    end
+  end
+
   def list_contact_details
     contact_details = self.contact_details
     return {
@@ -101,6 +113,13 @@ class User < ApplicationRecord
   end
 
   private
+
+  def self.contact_attribute?(attribute)
+    return true if attribute == "phone"
+    return true if attribute == "slack"
+    return true if attribute == "email"
+    false
+  end
 
   def list_tech_skills
     UserTechSkill.joins(:tech_skill).where(user_id: self.id).pluck("tech_skills.title")
