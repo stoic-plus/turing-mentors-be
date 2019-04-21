@@ -10,4 +10,9 @@ class ContactDetails < ApplicationRecord
       user: user
     )
   end
+
+  def self.update_for_user(user, detail, updated_value)
+    binding.pry
+    find_by(user: user.id).update(detail.to_sym => updated_value)
+  end
 end

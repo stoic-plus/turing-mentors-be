@@ -69,9 +69,8 @@ class User < ApplicationRecord
   def self.update_mentee(mentee, mentee_params)
     mentee_params.each do |attribute, value|
       next unless value
-      if contact_attribute?(attribute)
-        update_contact(mentee.id, attribute, value)
-      elsif attribute == "availability"
+      ContactDetails.update_for_user(mentee, attribute, value) and next if contact_attribute?(attribute)
+      if attribute == "availability"
         update_availability(mentee.id, value)
       elsif attribute == "identities"
         current_identities = mentee.identities.pluck(:id)
