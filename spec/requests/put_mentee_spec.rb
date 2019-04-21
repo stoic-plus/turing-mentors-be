@@ -5,9 +5,9 @@ describe 'PUT /mentees', type: :request do
     i_1 = Identity.create(title: 'male')
     i_2 = Identity.create(title: 'parent')
     i_3 = Identity.create(title: 'pianist')
-    i_4 = Identity.create(title: 'biker')
-    i_5 = Identity.create(title: 'surfer')
-    i_6 = Identity.create(title: 'renegade')
+    @i_4 = Identity.create(title: 'biker')
+    @i_5 = Identity.create(title: 'surfer')
+    @i_6 = Identity.create(title: 'renegade')
     @user = User.create(
       background: 'a',
       cohort: 1810,
@@ -81,7 +81,7 @@ describe 'PUT /mentees', type: :request do
         program: "FE",
         email: "new_mail",
         first_name: "Jorge",
-        identities: [4,5,6],
+        identities: [@i_4.id,@i_5.id,@i_6.id],
         last_name: "a",
         phone: "8",
         slack: "@slackville",

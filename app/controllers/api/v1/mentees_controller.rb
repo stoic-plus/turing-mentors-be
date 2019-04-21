@@ -10,7 +10,7 @@ class Api::V1::MenteesController < ApplicationController
   end
 
   def update
-    mentee = User.find(params[:id])
+    mentee = User.find_by(id: params[:id])
     if mentee
       mentee_params.each do |attribute, value|
         next unless value
@@ -32,7 +32,7 @@ class Api::V1::MenteesController < ApplicationController
       end
       render json: MentorSerializer.new(mentee), status: 200
     else
-
+      render json: {"message" => "mentee not found by that id"}, status: 404
     end
   end
 
