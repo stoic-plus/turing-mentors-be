@@ -13,7 +13,17 @@ class Api::V1::MentorsController < ApplicationController
       render json: { message: "incorrect user information supplied"}, status: 400
     end
   end
-  
+
+  def update
+    mentor = User.find_by(id: params[:id])
+    if mentor
+      User.update_mentor(mentor, mentor_params)
+      render json: MentorSerializer.new(mentor), status: 200
+    else
+      render json: {"message" => "mentor not found by that id"}, status: 404
+    end
+  end
+
   private
 
   def mentor_params
@@ -32,6 +42,6 @@ class Api::V1::MentorsController < ApplicationController
     :non_tech_skills => [],
     :identities => [],
     :availability => {}
-  )
+    )
   end
 end

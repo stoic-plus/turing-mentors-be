@@ -2,7 +2,8 @@ require 'rails_helper'
 
 describe 'PUT /mentors', type: :request do
   before :each do
-    i_1 = Identity.create(title: 'female')
+    @i_1 = Identity.create(title: 'female')
+    @i_2 = Identity.create(title: 'dog owner')
     @user = User.create(
       background: 'a',
       cohort: 1810,
@@ -10,13 +11,18 @@ describe 'PUT /mentors', type: :request do
       first_name: "Jordan",
       last_name: "l",
       current_job: "Mcdonalds",
-      location: "Atlanta"
+      location: "Atlanta",
+      mentor: true
     )
     @ts_1 = TechSkill.create(title: 'javascript')
     @ts_2 = TechSkill.create(title: 'python')
+    @ts_3 = TechSkill.create(title: 'elixir')
+    @ts_4 = TechSkill.create(title: 'java')
     @nts_1 = NonTechSkill.create(title: 'stress management')
     @nts_2 = NonTechSkill.create(title: 'public speaking')
-    UserIdentity.create(user: @user, identity_id: i_1.id)
+    @nts_3 = NonTechSkill.create(title: 'public chanting')
+    @nts_4 = NonTechSkill.create(title: 'public flogging')
+    UserIdentity.create(user: @user, identity_id: @i_1.id)
     UserTechSkill.create(user: @user, tech_skill_id: @ts_1.id)
     UserNonTechSkill.create(user: @user, non_tech_skill_id: @nts_1.id)
 
@@ -78,8 +84,8 @@ describe 'PUT /mentors', type: :request do
       expect(returned_user["first_name"]).to eq(@user[:first_name])
       expect(returned_user["last_name"]).to eq(@user[:last_name])
       expect(returned_user["identities"]).to eq(@user.identities.pluck(:title))
-      expect(returned_user["tech_skills"]).to eq([@ts_1.id, @ts_2.id])
-      expect(returned_user["non_tech_skills"]).to eq([@nts_1.id, @nts_2.id])
+      expect(returned_user["tech_skills"]).to eq([@ts_1.title, @ts_2.title])
+      expect(returned_user["non_tech_skills"]).to eq([@nts_1.title, @nts_2.title])
       expect(returned_user["contact_details"]["phone"]).to eq(updated[:phone])
       expect(returned_user["contact_details"]["slack"]).to eq(updated[:slack])
       expect(returned_user["availability"]).to eq(return_availability)
@@ -87,14 +93,18 @@ describe 'PUT /mentors', type: :request do
   end
 
   context 'with valid id and passing all attributes' do
-    xit 'returns the updated user' do
+    it 'returns the updated user' do
       updated = {
         background: 'diff',
         cohort: 1811,
         program: "FE",
+        current_job: "BK",
+        location: "UK",
         email: "new_mail",
         first_name: "Jorge",
-        identities: [@i_4.id,@i_5.id,@i_6.id],
+        tech_skills: [@ts_3.id, @ts_4.id],
+        non_tech_skills: [@nts_2.id, @nts_3.id, @nts_4.id],
+        identities: [@i_2.id],
         last_name: "a",
         phone: "8",
         slack: "@slackville",
@@ -109,27 +119,32 @@ describe 'PUT /mentors', type: :request do
         }
       }
 
-      put "/api/v1/mentees/#{@user.id}", params: updated
+      put "/api/v1/mentors/#{@user.id}", params: updated
 
       expect(response.status).to eq(200)
       expect(response).to be_successful
-      returned_user = JSON.parse(response.body)["data"]["attributes"]
 
+      returned_user = JSON.parse(response.body)["data"]["attributes"]
+      expect(returned_user["mentor"]).to be_truthy
       expect(returned_user["background"]).to eq(updated[:background])
+      expect(returned_user["location"]).to eq(updated[:location])
       expect(returned_user["cohort"]).to eq(updated[:cohort])
       expect(returned_user["program"]).to eq(updated[:program])
+      expect(returned_user["current_job"]).to eq(updated[:current_job])
       expect(returned_user["contact_details"]["email"]).to eq(updated[:email])
-      expect(returned_user["first_name"]).to eq(updated[:first_name])
-      expect(returned_user["identities"]).to eq(Identity.pluck(:title))
-      expect(returned_user["last_name"]).to eq(updated[:last_name])
       expect(returned_user["contact_details"]["phone"]).to eq(updated[:phone])
       expect(returned_user["contact_details"]["slack"]).to eq(updated[:slack])
+      expect(returned_user["first_name"]).to eq(updated[:first_name])
+      expect(returned_user["last_name"]).to eq(updated[:last_name])
+      expect(returned_user["identities"]).to eq([@i_1.title, @i_2.title])
+      expect(returned_user["tech_skills"]).to eq([@ts_1.title, @ts_3.title, @ts_4.title])
+      expect(returned_user["non_tech_skills"]).to eq([@nts_1.title, @nts_2.title, @nts_3.title, @nts_4.title])
       expect(returned_user["availability"]).to eq(updated[:availability])
     end
   end
 
   context 'with invalid user id' do
-    xit 'returns 404 status code' do
+    it 'returns 404 status code' do
       updated = {
         phone: "510",
         slack: "@burgerzBoss",
@@ -144,11 +159,11 @@ describe 'PUT /mentors', type: :request do
         }
       }
 
-      put "/api/v1/mentees/12", params: updated
+      put "/api/v1/mentors/12", params: updated
 
       expect(response).to_not be_successful
       expect(response.status).to eq(404)
-      expect(JSON.parse(response.body)).to eq({"message" => "mentee not found by that id"})
+      expect(JSON.parse(response.body)).to eq({"message" => "mentor not found by that id"})
     end
   end
 end
