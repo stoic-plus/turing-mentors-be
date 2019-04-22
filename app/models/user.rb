@@ -57,6 +57,8 @@ class User < ApplicationRecord
       ContactDetails.update_for_user(mentor, attribute, value) and next if contact_attribute?(attribute)
       Availability.update_for_user(mentor, value) and next if attribute == "availability"
       UserIdentity.update_for_user(mentor, value) and next if attribute == "identities"
+      UserTechSkill.update_for_user(mentor, value) and next if attribute == "tech_skills"
+      UserNonTechSkill.update_for_user(mentor, value) and next if attribute == "non_tech_skills"
 
       value = value.to_i if attribute == "cohort"
       mentor.update(attribute.to_sym => value)
