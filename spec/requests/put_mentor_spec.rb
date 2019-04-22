@@ -1,23 +1,24 @@
 require 'rails_helper'
 
-describe 'PUT /mentees', type: :request do
+describe 'PUT /mentors', type: :request do
   before :each do
-    i_1 = Identity.create(title: 'male')
-    i_2 = Identity.create(title: 'parent')
-    i_3 = Identity.create(title: 'pianist')
-    @i_4 = Identity.create(title: 'biker')
-    @i_5 = Identity.create(title: 'surfer')
-    @i_6 = Identity.create(title: 'renegade')
+    i_1 = Identity.create(title: 'female')
     @user = User.create(
       background: 'a',
       cohort: 1810,
       program: "BE",
       first_name: "Jordan",
       last_name: "l",
+      current_job: "Mcdonalds",
+      location: "Atlanta"
     )
+    @ts_1 = TechSkill.create(title: 'javascript')
+    @ts_2 = TechSkill.create(title: 'python')
+    @nts_1 = NonTechSkill.create(title: 'stress management')
+    @nts_2 = NonTechSkill.create(title: 'public speaking')
     UserIdentity.create(user: @user, identity_id: i_1.id)
-    UserIdentity.create(user: @user, identity_id: i_2.id)
-    UserIdentity.create(user: @user, identity_id: i_3.id)
+    UserTechSkill.create(user: @user, tech_skill_id: @ts_1.id)
+    UserNonTechSkill.create(user: @user, non_tech_skill_id: @nts_1.id)
 
     @contact = ContactDetails.create(email: "mail",phone:"2",slack:"@slack", user: @user)
     Availability.create(day_of_week: 0, morning: false, afternoon: false, evening: true, user: @user)
@@ -29,11 +30,18 @@ describe 'PUT /mentees', type: :request do
     Availability.create(day_of_week: 6, morning: false, afternoon: true, evening: true, user: @user)
   end
 
-  context 'with valid id and passing some attributes' do
+  context 'with valid id, passing some attributes, adding to skills' do
     it 'returns the updated user' do
+      user_contact = @user.contact_details
+      expect(user_contact.phone).to eq(@contact.phone)
+      expect(user_contact.slack).to eq(@contact.slack)
+      expect(@user.tech_skills.count).to eq(1)
+      expect(@user.non_tech_skills.count).to eq(1)
       updated = {
         phone: "510",
         slack: "@burgerzBoss",
+        tech_skills: [@ts_2.id],
+        non_tech_skills: [@nts_2.id],
         availability: {
           "0" => false,
           "1" => false,
@@ -55,19 +63,23 @@ describe 'PUT /mentees', type: :request do
         "6" => [true, true, true]
       }
 
-      put "/api/v1/mentees/#{@user.id}", params: updated
+      put "/api/v1/mentors/#{@user.id}", params: updated
 
       expect(response.status).to eq(200)
       expect(response).to be_successful
       returned_user = JSON.parse(response.body)["data"]["attributes"]
+      expect(returned_user["mentor"]).to be_truthy
       expect(returned_user["background"]).to eq(@user[:background])
+      expect(returned_user["location"]).to eq(@user[:location])
       expect(returned_user["cohort"]).to eq(@user[:cohort])
       expect(returned_user["program"]).to eq(@user[:program])
+      expect(returned_user["current_job"]).to eq(@user[:current_job])
       expect(returned_user["email"]).to eq(@user[:email])
       expect(returned_user["first_name"]).to eq(@user[:first_name])
-      expect(returned_user["identities"]).to eq(@user.identities.pluck(:title))
       expect(returned_user["last_name"]).to eq(@user[:last_name])
-      expect(returned_user["mentor"]).to be_falsey 
+      expect(returned_user["identities"]).to eq(@user.identities.pluck(:title))
+      expect(returned_user["tech_skills"]).to eq([@ts_1.id, @ts_2.id])
+      expect(returned_user["non_tech_skills"]).to eq([@nts_1.id, @nts_2.id])
       expect(returned_user["contact_details"]["phone"]).to eq(updated[:phone])
       expect(returned_user["contact_details"]["slack"]).to eq(updated[:slack])
       expect(returned_user["availability"]).to eq(return_availability)
@@ -75,7 +87,7 @@ describe 'PUT /mentees', type: :request do
   end
 
   context 'with valid id and passing all attributes' do
-    it 'returns the updated user' do
+    xit 'returns the updated user' do
       updated = {
         background: 'diff',
         cohort: 1811,
@@ -117,7 +129,7 @@ describe 'PUT /mentees', type: :request do
   end
 
   context 'with invalid user id' do
-    it 'returns 404 status code' do
+    xit 'returns 404 status code' do
       updated = {
         phone: "510",
         slack: "@burgerzBoss",
