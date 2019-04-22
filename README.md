@@ -22,7 +22,9 @@ This is the backend to an application that is designed to ease the process of cu
 - [Getting Started](#getting-started)
 - [Endpoints](#endpoints)
   * [GET mentors](#get-mentors)
+  * [Background On Endpoints](#background-on-endpoints)
   * [POST mentors / mentee](#mentor-and-mentee-creation)
+  * [PUT mentors / mentee](#mentor-and-mentee-update)  
 - [Built With](#built-with)
 - [Developers](#developers)
 - [Contributing](#contributing)
@@ -184,19 +186,18 @@ GET /api/v1/mentors?location=all&tech_skills=ruby,python
 
 <br>
 
-### Mentor and Mentee Creation
-
-`POST /api/v1/mentors` `POST /api/v1/mentees`
-
-All parameters are required:
+### Background on Endpoints
 
 `identities, tech_skills, non_tech_skills`
+
 * all take an array of ids that correspond to rows in those tables
-  * To create a mentor that is fluent in Ruby and Python - you would provide:
+  * To __create__ a mentor that is fluent in Ruby and Python - you would provide:
     `tech_skills: [1, 3]` in the body
+  * To __update__ a mentee by adding identities - you would provide:
+    `identities: [4, 5]` in the body
 
 `tech_skills, non_tech_skills, location, current_job`
-* Are not specified for the `/mentee` route
+* Are not specified for the `/mentee` route (for both `POST` and `PUT`)
 
 __Availability__
 
@@ -205,10 +206,286 @@ Is a hash with:
   * Array, of booleans, value (Boolean for Morning, Afternoon, Evening)
     * `"0": [false, false, true]` would indicate evening availability on Monday
 
+### Mentor and Mentee Creation
+
+`POST /api/v1/mentors` `POST /api/v1/mentees`
+
+All parameters are required:
+
+
 <details><summary>Example Request for /mentors:</summary>
 
 ```
 POST /api/v1/mentors
+Content-Type: application/json
+Accept: application/json
+
+{
+    "first_name": "Grace",
+    "last_name": "Hoper",
+    "identities": [0],
+    "cohort": 8210,
+    "program": "BE",
+    "current_job": "computer scientist",
+    "location": "New York, NY",
+    "slack": "@hopper",
+    "email": "g_hopper@gmail.com",
+    "phone": "555-555-5555",
+    "background": "Grace Brewster Murray Hopper was an American computer scientist and United States Navy rear admiral. One of the first programmers of the Harvard Mark I computer, she was a pioneer of computer programming who invented one of the first linkers",
+    "availability": {
+        "0": [
+            false,
+            true,
+            false
+        ],
+        "1": [
+            false,
+            false,
+            false
+        ],
+        "2": [
+            false,
+            true,
+            false
+        ],
+        "3": [
+            false,
+            false,
+            false
+        ],
+        "4": [
+            false,
+            false,
+            false
+        ],
+        "5": [
+            false,
+            false,
+            false
+        ],
+        "6": [
+            false,
+            false,
+            false
+        ]
+    },
+    "tech_skills": [
+        "4", "1", "3"
+    ],
+    "non_tech_skills": [
+        "6", "5", "4"
+    ]
+}
+```
+
+</details>
+
+
+<details><summary>Example Response:</summary>
+
+```
+{
+            "id": "5",
+            "type": "mentor",
+            "attributes": {
+                "first_name": "Grace",
+                "last_name": "Hoper",
+                "cohort": 8210,
+                "program": "BE",
+                "current_job": "computer scientist",
+                "background": "One of the first programmers of the Harvard Mark I computer, she was a pioneer of computer programming who invented one of the first linkers",
+                "mentor": true,
+                "location": "New York, NY",
+                "tech_skills": [
+                    "ruby",
+                    "javascript",
+                    "python",
+                    "java",
+                    "elixir",
+                    "c",
+                    "php",
+                    "swift",
+                    "sql"
+                ],
+                "non_tech_skills": [
+                    "stress management",
+                    "public speaking",
+                    "resumes",
+                    "technical interviews",
+                    "parenting",
+                    "wellness"
+                ],
+                "availability": {
+                    "0": [
+                        false,
+                        true,
+                        false
+                    ],
+                    "1": [
+                        false,
+                        false,
+                        false
+                    ],
+                    "2": [
+                        false,
+                        false,
+                        false
+                    ],
+                    "3": [
+                        false,
+                        true,
+                        false
+                    ],
+                    "4": [
+                        false,
+                        false,
+                        false
+                    ],
+                    "5": [
+                        false,
+                        false,
+                        false
+                    ],
+                    "6": [
+                        false,
+                        false,
+                        false
+                    ]
+                },
+                "identities": [
+                    "scientist"
+                ],
+                "contact_details": {
+                  "slack": "@hopper",
+                  "email": "g_hopper@gmail.com",
+                  "phone": "555-555-5555"
+                }
+            }
+        }
+```
+
+</details>
+
+<br>
+
+
+<details><summary>Example Request for /mentee:</summary>
+
+```
+POST /api/v1/mentees
+Content-Type: application/json
+Accept: application/json
+
+{
+  "background": "A person",
+  "cohort": 1810,
+  "program": "BE",
+  "email": "leranger@gmail.com",
+  "first_name": "jordan",
+  "identities": [8],
+  "last_name": "leranger",
+  "phone": "555-555-5555",
+  "slack": "@slack",
+  "availability": {
+    0 => [true, false, true],
+    1 => true,
+    2 => [true, false, false],
+    3 => [true, false, true],
+    4 => [false, false, true],
+    5 => [true, false, true],
+    6 => [true, false, false]
+  }
+}
+```
+
+</details>
+
+<details><summary>Example Response:</summary>
+
+```
+"data": {
+            "id": "5",
+            "type": "mentee",
+            "attributes": {
+                "first_name": "jordan",
+                "last_name": "leranger",
+                "cohort": 8210,
+                "program": "BE",
+                "current_job": "student",
+                "background": "A person",
+                "mentor": false,
+                "location": "Denver, CO",
+                "availability": {
+                    "0": [
+                        false,
+                        true,
+                        false
+                    ],
+                    "1": [
+                        false,
+                        false,
+                        false
+                    ],
+                    "2": [
+                        false,
+                        false,
+                        false
+                    ],
+                    "3": [
+                        false,
+                        true,
+                        false
+                    ],
+                    "4": [
+                        false,
+                        false,
+                        false
+                    ],
+                    "5": [
+                        false,
+                        false,
+                        false
+                    ],
+                    "6": [
+                        false,
+                        false,
+                        false
+                    ]
+                },
+                "identities": [
+                    "ski bum"
+                ],
+                "contact_details": {
+                  "slack": "@slack",
+                  "email": "leranger@gmail.com",
+                  "phone": "555-555-5555"
+                }
+            }
+        }
+```
+
+</details>
+
+### Mentor and Mentee Update
+
+`PUT /api/v1/mentors` `PUT /api/v1/mentees`
+
+Not all parameters are required. Very similar to post
+
+
+Currently the following attributes can only be _added_ to on this endpoint, NOT deleted. That will be a separate endpoint for security purposes.
+
+`identities, tech_skills, non_tech_skills`
+ * Latter two only apply to mentors
+
+
+<br>
+
+
+<details><summary>Example Request for /mentors:</summary>
+
+```
+PUT /api/v1/mentors
 Content-Type: application/json
 Accept: application/json
 
