@@ -1,16 +1,10 @@
 class Api::V1::MenteesController < ApplicationController
   def create
-    create_user(:mentee)
+    create_user(:mentee, mentee_params)
   end
 
   def update
-    mentee = User.find_by(id: params[:id])
-    if mentee
-      User.update_mentee(mentee, mentee_params)
-      render json: MenteeSerializer.new(mentee), status: 200
-    else
-      render json: {"message" => "mentee not found by that id"}, status: 404
-    end
+    update_user(:mentee, params[:id], mentee_params)
   end
 
   def destroy
