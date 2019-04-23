@@ -1,12 +1,6 @@
 class Api::V1::MenteesController < ApplicationController
   def create
-    mentee = User.new_mentee(mentee_params)
-    if mentee.save
-      User.create_mentee_info(mentee_params, mentee)
-      render json: MenteeSerializer.new(mentee), status: 200
-    else
-      render json: { message: "incorrect user information supplied"}, status: 400
-    end
+    create_user(:mentee)
   end
 
   def update
