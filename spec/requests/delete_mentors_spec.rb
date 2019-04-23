@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe 'DELETE /mentees', type: :request do
+describe 'DELETE /mentors', type: :request do
   before :each do
     i_1 = Identity.create(title: 'male')
     @user = User.create(
@@ -26,7 +26,7 @@ describe 'DELETE /mentees', type: :request do
 
       expect(response.status).to eq(204)
       expect(response).to be_successful
-      
+
       expect(User.count).to eq(0)
       expect(UserIdentity.count).to eq(0)
       expect(ContactDetails.count).to eq(0)
