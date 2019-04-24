@@ -5,23 +5,15 @@ class Api::V1::MentorsController < ApplicationController
   end
 
   def create
-    mentor = User.new_mentor(mentor_params)
-    if mentor.save
-      User.create_mentor_info(mentor_params, mentor)
-      render json: MentorSerializer.new(mentor), status: 200
-    else
-      render json: { message: "incorrect user information supplied"}, status: 400
-    end
+    create_user(:mentor, mentor_params)
   end
 
   def update
-    mentor = User.find_by(id: params[:id])
-    if mentor
-      User.update_mentor(mentor, mentor_params)
-      render json: MentorSerializer.new(mentor), status: 200
-    else
-      render json: {"message" => "mentor not found by that id"}, status: 404
-    end
+    update_user(:mentor, params[:id], mentor_params)
+  end
+
+  def destroy
+    destroy_user(:mentor, params[:id])
   end
 
   private

@@ -10,13 +10,13 @@ class User < ApplicationRecord
                         :current_job,
                         :background,
                         :location
-  has_one :contact_details
-  has_many :availabilities
-  has_many :user_identities
+  has_one :contact_details, dependent: :destroy
+  has_many :availabilities, dependent: :destroy
+  has_many :user_identities, dependent: :destroy
   has_many :identities, through: :user_identities
-  has_many :user_tech_skills
+  has_many :user_tech_skills, dependent: :destroy
   has_many :tech_skills, through: :user_tech_skills
-  has_many :user_non_tech_skills
+  has_many :user_non_tech_skills, dependent: :destroy
   has_many :non_tech_skills, through: :user_non_tech_skills
 
   def list_skills(type)
