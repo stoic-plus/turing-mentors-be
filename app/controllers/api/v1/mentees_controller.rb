@@ -3,6 +3,10 @@ class Api::V1::MenteesController < ApplicationController
     create_user(:mentee, mentee_params)
   end
 
+  def show
+    get_user(:mentee, params[:id])
+  end
+
   def update
     update_user(:mentee, params[:id], mentee_params)
   end
