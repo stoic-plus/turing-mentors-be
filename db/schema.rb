@@ -29,7 +29,7 @@ ActiveRecord::Schema.define(version: 2019_04_06_201059) do
     t.string "slack"
     t.string "linkedin"
     t.string "phone"
-    t.integer "preferred_method", default: 1
+    t.integer "preferred_method", default: 2
     t.bigint "user_id"
     t.index ["user_id"], name: "index_contact_details_on_user_id"
   end
