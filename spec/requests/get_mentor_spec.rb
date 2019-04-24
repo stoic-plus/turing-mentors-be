@@ -1,16 +1,23 @@
 require 'rails_helper'
 
-describe 'GET /mentees/:id', type: :request do
+describe 'GET /mentors/:id', type: :request do
   before :each do
-    i_2 = Identity.create(title: 'parent')
+    @i_1 = Identity.create(title: 'female')
     @user = User.create(
       background: 'a',
       cohort: 1810,
       program: "BE",
       first_name: "Jordan",
       last_name: "l",
+      current_job: "Mcdonalds",
+      location: "Atlanta",
+      mentor: true
     )
-    UserIdentity.create(user: @user, identity_id: i_2.id)
+    @ts_1 = TechSkill.create(title: 'javascript')
+    @nts_1 = NonTechSkill.create(title: 'stress management')
+    UserIdentity.create(user: @user, identity_id: @i_1.id)
+    UserTechSkill.create(user: @user, tech_skill_id: @ts_1.id)
+    UserNonTechSkill.create(user: @user, non_tech_skill_id: @nts_1.id)
 
     @contact = ContactDetails.create(email: "mail",phone:"2",slack:"@slack", user: @user)
     Availability.create(day_of_week: 0, morning: false, afternoon: false, evening: true, user: @user)
@@ -24,7 +31,7 @@ describe 'GET /mentees/:id', type: :request do
         "1" => [true, false, false]
       }
 
-      get "/api/v1/mentees/#{@user.id}"
+      get "/api/v1/mentors/#{@user.id}"
 
       expect(response.status).to eq(200)
       expect(response).to be_successful
@@ -45,7 +52,7 @@ describe 'GET /mentees/:id', type: :request do
 
   context 'passing an invalid id' do
     it 'returns 404 status code' do
-      get "/api/v1/mentees/12"
+      get "/api/v1/mentors/12"
 
       expect(response).to_not be_successful
       expect(response.status).to eq(404)
