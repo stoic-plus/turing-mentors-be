@@ -190,7 +190,7 @@ GET /api/v1/mentors?location=all&tech_skills=ruby,python
 
 ### Get Mentor and Mentee
 
-`POST /api/v1/mentors` `POST /api/v1/mentees`
+`GET /api/v1/mentors/:id` `GET /api/v1/mentees/:id`
 
 All parameters are required:
 
