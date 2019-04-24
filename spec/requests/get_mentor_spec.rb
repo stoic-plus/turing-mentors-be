@@ -56,7 +56,7 @@ describe 'GET /mentors/:id', type: :request do
 
       expect(response).to_not be_successful
       expect(response.status).to eq(404)
-      expect(JSON.parse(response.body)).to eq({"message" => "mentee not found by that id"})
+      expect(JSON.parse(response.body)).to eq({"message" => "mentor not found by that id"})
     end
   end
 end
