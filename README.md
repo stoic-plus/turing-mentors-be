@@ -24,7 +24,8 @@ This is the backend to an application that is designed to ease the process of cu
   * [GET mentors](#get-mentors)
   * [Background On Endpoints](#background-on-endpoints)
   * [POST mentors / mentee](#mentor-and-mentee-creation)
-  * [PUT mentors / mentee](#mentor-and-mentee-update)  
+  * [PUT mentors / mentee](#mentor-and-mentee-update)
+  * [DELETE mentors / mentee](#mentor-and-mentee-destroy)
 - [Built With](#built-with)
 - [Developers](#developers)
 - [Contributing](#contributing)
@@ -734,6 +735,39 @@ Accept: application/json
 ```
 
 </details>
+
+## Mentor and Mentee Destroy
+
+
+`DELETE /api/v1/mentors/:id` `DELETE /api/v1/mentees/:id`
+
+Removing a user currently removes entries in the following tables (dependent destroy)
+* `contact_details`
+* `availabilities`
+* `user_identities`
+* `user_tech_skills`
+* `user_non_tech_skills`
+
+_When those entries are present - mentees have less information_
+
+<br>
+
+
+<details><summary>Example Request for /mentors:</summary>
+
+```
+DELETE /api/v1/mentors/2
+Content-Type: application/json
+Accept: application/json
+```
+
+</details>
+
+<br />
+
+__Response__
+* Simply a 204 status code
+
 
 ## Built With
 
