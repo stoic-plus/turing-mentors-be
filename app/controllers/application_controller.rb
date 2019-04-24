@@ -31,6 +31,20 @@ class ApplicationController < ActionController::API
     end
   end
 
+  def get_user(type, id)
+    user = User.find_by(id: id)
+    if user
+      if type == :mentee
+        render json: MenteeSerializer.new(user), status: 200
+      elsif type == :mentor
+        render json: MentorSerializer.new(user), status: 200
+      end
+    else
+      base = type == :mentor ? "mentor" : "mentee"
+      render json: {"message" => "#{base} not found by that id"}, status: 404
+    end
+  end
+
   def destroy_user(type, id)
     user = User.find_by(id: id)
     if user

@@ -8,6 +8,10 @@ class Api::V1::MentorsController < ApplicationController
     create_user(:mentor, mentor_params)
   end
 
+  def show
+    get_user(:mentor, params[:id])
+  end
+
   def update
     update_user(:mentor, params[:id], mentor_params)
   end
