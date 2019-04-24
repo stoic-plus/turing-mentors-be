@@ -22,6 +22,7 @@ This is the backend to an application that is designed to ease the process of cu
 - [Getting Started](#getting-started)
 - [Endpoints](#endpoints)
   * [GET mentors](#get-mentors)
+  * [GET mentor and mentee](#get-mentor-and-mentee)
   * [Background On Endpoints](#background-on-endpoints)
   * [POST mentors / mentee](#mentor-and-mentee-creation)
   * [PUT mentors / mentee](#mentor-and-mentee-update)
@@ -186,6 +187,189 @@ GET /api/v1/mentors?location=all&tech_skills=ruby,python
 </details>
 
 <br>
+
+### Get Mentor and Mentee
+
+`POST /api/v1/mentors` `POST /api/v1/mentees`
+
+All parameters are required:
+
+
+<details><summary>Example Request for /mentors/:id :</summary>
+
+```
+GET /api/v1/mentors/5
+Content-Type: application/json
+Accept: application/json
+```
+
+</details>
+
+
+<details><summary>Example Response:</summary>
+
+```
+"data": {
+            "id": "5",
+            "type": "mentor",
+            "attributes": {
+                "first_name": "Grace",
+                "last_name": "Hoper",
+                "cohort": 8210,
+                "program": "BE",
+                "current_job": "computer scientist",
+                "background": "One of the first programmers of the Harvard Mark I computer, she was a pioneer of computer programming who invented one of the first linkers",
+                "mentor": true,
+                "location": "New York, NY",
+                "tech_skills": [
+                    "ruby",
+                    "javascript",
+                    "python",
+                    "java",
+                    "elixir",
+                    "c",
+                    "php",
+                    "swift",
+                    "sql"
+                ],
+                "non_tech_skills": [
+                    "stress management",
+                    "public speaking",
+                    "resumes",
+                    "technical interviews",
+                    "parenting",
+                    "wellness"
+                ],
+                "availability": {
+                    "0": [
+                        false,
+                        true,
+                        false
+                    ],
+                    "1": [
+                        false,
+                        false,
+                        false
+                    ],
+                    "2": [
+                        false,
+                        false,
+                        false
+                    ],
+                    "3": [
+                        false,
+                        true,
+                        false
+                    ],
+                    "4": [
+                        false,
+                        false,
+                        false
+                    ],
+                    "5": [
+                        false,
+                        false,
+                        false
+                    ],
+                    "6": [
+                        false,
+                        false,
+                        false
+                    ]
+                },
+                "identities": [
+                    "scientist"
+                ],
+                "contact_details": {
+                  "slack": "@hopper",
+                  "email": "g_hopper@gmail.com",
+                  "phone": "555-555-5555"
+                }
+            }
+        }
+```
+
+</details>
+
+<br>
+
+
+<details><summary>Example Request for /mentees/:id :</summary>
+
+```
+GET /api/v1/mentees/5
+Content-Type: application/json
+Accept: application/json
+```
+
+</details>
+
+<details><summary>Example Response:</summary>
+
+```
+"data": {
+            "id": "5",
+            "type": "mentee",
+            "attributes": {
+                "first_name": "jordan",
+                "last_name": "leranger",
+                "cohort": 8210,
+                "program": "BE",
+                "current_job": "student",
+                "background": "A person",
+                "mentor": false,
+                "location": "Denver, CO",
+                "availability": {
+                    "0": [
+                        false,
+                        true,
+                        false
+                    ],
+                    "1": [
+                        false,
+                        false,
+                        false
+                    ],
+                    "2": [
+                        false,
+                        false,
+                        false
+                    ],
+                    "3": [
+                        false,
+                        true,
+                        false
+                    ],
+                    "4": [
+                        false,
+                        false,
+                        false
+                    ],
+                    "5": [
+                        false,
+                        false,
+                        false
+                    ],
+                    "6": [
+                        false,
+                        false,
+                        false
+                    ]
+                },
+                "identities": [
+                    "ski bum"
+                ],
+                "contact_details": {
+                  "slack": "@slack",
+                  "email": "leranger@gmail.com",
+                  "phone": "555-555-5555"
+                }
+            }
+        }
+```
+
+</details>
+
 
 ### Background on Endpoints
 
