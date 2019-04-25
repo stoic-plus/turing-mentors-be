@@ -13,7 +13,12 @@ class Api::V1::MentorsController < ApplicationController
   end
 
   def update
-    update_user(:mentor, params[:id], mentor_params)
+    mentor = User.find_by(id: params[:id], mentor: true)
+    if mentor
+      update_user(:mentor, mentor, mentor_params)
+    else
+      render json: {"message" => "mentor not found by that id"}, status: 404
+    end
   end
 
   def destroy
