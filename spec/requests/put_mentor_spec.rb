@@ -56,8 +56,11 @@ describe 'PUT /mentors', type: :request do
       )
       UserIdentity.create(user: user, identity_id: @i_1.id)
       contact = ContactDetails.create(email: "mail",phone:"2",slack:"@slack", user: user)
-      Availability.create(day_of_week: 0, morning: true, afternoon: false, evening: true, user: user)
+      availability = Availability.create(day_of_week: 0, morning: true, afternoon: false, evening: true, user: user)
       expect(user.identities.first.title).to eq(@i_1.title)
+      expect(user.availabilities.first.morning).to eq(availability.morning)
+      expect(user.availabilities.first.afternoon).to eq(availability.afternoon)
+      expect(user.availabilities.first.evening).to eq(availability.evening)
       expect(user.contact_details.phone).to eq(contact.phone)
       expect(user.contact_details.slack).to eq(contact.slack)
 
@@ -68,6 +71,9 @@ describe 'PUT /mentors', type: :request do
       expect(user.identities.first.title).to eq(@i_1.title)
       expect(user.contact_details.phone).to eq(contact.phone)
       expect(user.contact_details.slack).to eq(contact.slack)
+      expect(user.availabilities.first.morning).to eq(availability.morning)
+      expect(user.availabilities.first.afternoon).to eq(availability.afternoon)
+      expect(user.availabilities.first.evening).to eq(availability.evening)
     end
   end
 

@@ -15,7 +15,7 @@ describe 'PUT /mentees', type: :request do
       first_name: "Jordan",
       last_name: "l",
     )
-    UserIdentity.create(user: @user, identity_id: i_1.id)
+    UserIdentity.create(user: @user, identity_id: @i_1.id)
     UserIdentity.create(user: @user, identity_id: i_2.id)
     UserIdentity.create(user: @user, identity_id: i_3.id)
 
@@ -44,13 +44,16 @@ describe 'PUT /mentees', type: :request do
 
       ts_1 = TechSkill.create(title: 'javascript')
       nts_1 = NonTechSkill.create(title: 'stress management')
-      UserIdentity.create(user: @user, identity_id: @i_1.id)
-      UserTechSkill.create(user: @user, tech_skill_id: ts_1.id)
-      UserNonTechSkill.create(user: @user, non_tech_skill_id: nts_1.id)
-      ContactDetails.create(email: "mail",phone:"2",slack:"@slack", user: user)
-      Availability.create(day_of_week: 0, morning: false, afternoon: false, evening: true, user: user)
+      UserIdentity.create(user: user, identity_id: @i_1.id)
+      UserTechSkill.create(user: user, tech_skill_id: ts_1.id)
+      UserNonTechSkill.create(user: user, non_tech_skill_id: nts_1.id)
+      contact = ContactDetails.create(email: "mail",phone:"2",slack:"@slack", user: user)
+      availability = Availability.create(day_of_week: 0, morning: false, afternoon: false, evening: true, user: user)
       expect(user.tech_skills.first.title).to eq(ts_1.title)
       expect(user.non_tech_skills.first.title).to eq(nts_1.title)
+      expect(user.availabilities.first.morning).to eq(availability.morning)
+      expect(user.availabilities.first.afternoon).to eq(availability.afternoon)
+      expect(user.availabilities.first.evening).to eq(availability.evening)
       expect(user.identities.first.title).to eq(@i_1.title)
       expect(user.contact_details.phone).to eq(contact.phone)
       expect(user.contact_details.slack).to eq(contact.slack)
@@ -72,6 +75,9 @@ describe 'PUT /mentees', type: :request do
       expect(user.identities.first.title).to eq(@i_1.title)
       expect(user.contact_details.phone).to eq(contact.phone)
       expect(user.contact_details.slack).to eq(contact.slack)
+      expect(user.availabilities.first.morning).to eq(availability.morning)
+      expect(user.availabilities.first.afternoon).to eq(availability.afternoon)
+      expect(user.availabilities.first.evening).to eq(availability.evening)
     end
   end
 
