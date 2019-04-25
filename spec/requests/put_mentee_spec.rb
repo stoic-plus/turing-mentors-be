@@ -2,7 +2,7 @@ require 'rails_helper'
 
 describe 'PUT /mentees', type: :request do
   before :each do
-    i_1 = Identity.create(title: 'male')
+    @i_1 = Identity.create(title: 'male')
     i_2 = Identity.create(title: 'parent')
     i_3 = Identity.create(title: 'pianist')
     @i_4 = Identity.create(title: 'biker')
@@ -27,6 +27,52 @@ describe 'PUT /mentees', type: :request do
     Availability.create(day_of_week: 4, morning: false, afternoon: true, evening: true, user: @user)
     Availability.create(day_of_week: 5, morning: false, afternoon: true, evening: true, user: @user)
     Availability.create(day_of_week: 6, morning: false, afternoon: true, evening: true, user: @user)
+  end
+
+  context 'passing a valid id' do
+    it 'does not update user if found user is a mentor' do
+      user = User.create(
+        background: 'a',
+        cohort: 1810,
+        program: "BE",
+        first_name: "Jordan",
+        last_name: "l",
+        current_job: "Mcdonalds",
+        location: "Atlanta",
+        mentor: true
+      )
+
+      ts_1 = TechSkill.create(title: 'javascript')
+      nts_1 = NonTechSkill.create(title: 'stress management')
+      UserIdentity.create(user: @user, identity_id: @i_1.id)
+      UserTechSkill.create(user: @user, tech_skill_id: ts_1.id)
+      UserNonTechSkill.create(user: @user, non_tech_skill_id: nts_1.id)
+      ContactDetails.create(email: "mail",phone:"2",slack:"@slack", user: user)
+      Availability.create(day_of_week: 0, morning: false, afternoon: false, evening: true, user: user)
+      expect(user.tech_skills.first.title).to eq(ts_1.title)
+      expect(user.non_tech_skills.first.title).to eq(nts_1.title)
+      expect(user.identities.first.title).to eq(@i_1.title)
+      expect(user.contact_details.phone).to eq(contact.phone)
+      expect(user.contact_details.slack).to eq(contact.slack)
+
+      updated = {
+        phone: "1200",
+        slack: "@Bossman",
+        availability: {
+          "0" => true
+        }
+      }
+
+      put "/api/v1/mentees/#{user.id}", params: updated
+
+      expect(response.status).to eq(404)
+      expect(JSON.parse(response.body)).to eq({"message" => "mentee not found by that id"})
+      expect(user.tech_skills.first.title).to eq(ts_1.title)
+      expect(user.non_tech_skills.first.title).to eq(nts_1.title)
+      expect(user.identities.first.title).to eq(@i_1.title)
+      expect(user.contact_details.phone).to eq(contact.phone)
+      expect(user.contact_details.slack).to eq(contact.slack)
+    end
   end
 
   context 'with valid id and passing some attributes' do
@@ -67,7 +113,7 @@ describe 'PUT /mentees', type: :request do
       expect(returned_user["first_name"]).to eq(@user[:first_name])
       expect(returned_user["identities"]).to eq(@user.identities.pluck(:title))
       expect(returned_user["last_name"]).to eq(@user[:last_name])
-      expect(returned_user["mentor"]).to be_falsey 
+      expect(returned_user["mentor"]).to be_falsey
       expect(returned_user["contact_details"]["phone"]).to eq(updated[:phone])
       expect(returned_user["contact_details"]["slack"]).to eq(updated[:slack])
       expect(returned_user["availability"]).to eq(return_availability)
