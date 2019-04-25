@@ -44,7 +44,7 @@ describe 'DELETE /mentors', type: :request do
       expect(UserTechSkill.count).to eq(1)
       expect(UserNonTechSkill.count).to eq(1)
 
-      delete "/api/v1/mentees/#{user.id}"
+      delete "/api/v1/mentors/#{user.id}"
 
       expect(response.status).to eq(404)
       expect(JSON.parse(response.body)).to eq({"message" => "mentor not found by that id"})

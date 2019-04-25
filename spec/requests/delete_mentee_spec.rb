@@ -2,7 +2,7 @@ require 'rails_helper'
 
 describe 'DELETE /mentees', type: :request do
   before :each do
-    i_1 = Identity.create(title: 'male')
+    @i_1 = Identity.create(title: 'male')
     @user = User.create(
       background: 'a',
       cohort: 1810,
@@ -11,7 +11,7 @@ describe 'DELETE /mentees', type: :request do
       last_name: "l",
       mentor: false
     )
-    UserIdentity.create(user: @user, identity_id: i_1.id)
+    UserIdentity.create(user: @user, identity_id: @i_1.id)
     ContactDetails.create(email: "mail",phone:"2",slack:"@slack", user: @user)
     Availability.create(day_of_week: 0, morning: false, afternoon: false, evening: true, user: @user)
   end
@@ -28,13 +28,13 @@ describe 'DELETE /mentees', type: :request do
         location: "Atlanta",
         mentor: true
       )
-      TechSkill.create(title: 'javascript')
-      NonTechSkill.create(title: 'stress management')
+      ts_1 = TechSkill.create(title: 'javascript')
+      nts_1 = NonTechSkill.create(title: 'stress management')
       UserIdentity.create(user: @user, identity_id: @i_1.id)
-      UserTechSkill.create(user: @user, tech_skill_id: @ts_1.id)
-      UserNonTechSkill.create(user: @user, non_tech_skill_id: @nts_1.id)
-      ContactDetails.create(email: "mail",phone:"2",slack:"@slack", user: @user)
-      Availability.create(day_of_week: 0, morning: false, afternoon: false, evening: true, user: @user)
+      UserTechSkill.create(user: @user, tech_skill_id: ts_1.id)
+      UserNonTechSkill.create(user: @user, non_tech_skill_id: nts_1.id)
+      ContactDetails.create(email: "mail",phone:"2",slack:"@slack", user: user)
+      Availability.create(day_of_week: 0, morning: false, afternoon: false, evening: true, user: user)
 
       expect(User.count).to eq(2)
       expect(UserIdentity.count).to eq(2)
