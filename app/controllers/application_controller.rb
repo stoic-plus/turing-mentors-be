@@ -15,44 +15,26 @@ class ApplicationController < ActionController::API
     end
   end
 
-  def update_user(type, id, params)
-    user = User.find_by(id: id)
-    if user
-      if type == :mentor
-        User.update_mentor(user, params)
-        render json: MentorSerializer.new(user), status: 200
-      elsif type == :mentee
-        User.update_mentee(user, params)
-        render json: MenteeSerializer.new(user), status: 200
-      end
-    else
-      base = type == :mentor ? "mentor" : "mentee"
-      render json: {"message" => "#{base} not found by that id"}, status: 404
+  def update_user(type, user, params)
+    if type == :mentor
+      User.update_mentor(user, params)
+      render json: MentorSerializer.new(user), status: 200
+    elsif type == :mentee
+      User.update_mentee(user, params)
+      render json: MenteeSerializer.new(user), status: 200
     end
   end
 
-  def get_user(type, id)
-    user = User.find_by(id: id)
-    if user
-      if type == :mentee
-        render json: MenteeSerializer.new(user), status: 200
-      elsif type == :mentor
-        render json: MentorSerializer.new(user), status: 200
-      end
-    else
-      base = type == :mentor ? "mentor" : "mentee"
-      render json: {"message" => "#{base} not found by that id"}, status: 404
+  def serialize_user(type, user)
+    if type == :mentee
+      render json: MenteeSerializer.new(user), status: 200
+    elsif type == :mentor
+      render json: MentorSerializer.new(user), status: 200
     end
   end
 
-  def destroy_user(type, id)
-    user = User.find_by(id: id)
-    if user
-      User.destroy(user.id)
-      render nothing: true, status: 204
-    else
-      base = type == :mentor ? "mentor" : "mentee"
-      render json: {"message" => "#{base} not found by that id"}, status: 404
-    end
+  def destroy_user(type, user)
+    User.destroy(user.id)
+    render nothing: true, status: 204
   end
 end

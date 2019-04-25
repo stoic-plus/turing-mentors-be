@@ -36,6 +36,47 @@ describe 'PUT /mentors', type: :request do
     Availability.create(day_of_week: 6, morning: false, afternoon: true, evening: true, user: @user)
   end
 
+  context 'passing a valid id' do
+    it 'does not update user if found user is a mentee' do
+      updated = {
+        phone: "510",
+        slack: "@burgerzBoss",
+        availability: {
+          "0" => false
+        }
+      }
+
+      user = User.create(
+        background: 'a',
+        cohort: 1810,
+        program: "BE",
+        first_name: "Jordan",
+        last_name: "l",
+        mentor: false
+      )
+      UserIdentity.create(user: user, identity_id: @i_1.id)
+      contact = ContactDetails.create(email: "mail",phone:"2",slack:"@slack", user: user)
+      availability = Availability.create(day_of_week: 0, morning: true, afternoon: false, evening: true, user: user)
+      expect(user.identities.first.title).to eq(@i_1.title)
+      expect(user.availabilities.first.morning).to eq(availability.morning)
+      expect(user.availabilities.first.afternoon).to eq(availability.afternoon)
+      expect(user.availabilities.first.evening).to eq(availability.evening)
+      expect(user.contact_details.phone).to eq(contact.phone)
+      expect(user.contact_details.slack).to eq(contact.slack)
+
+      put "/api/v1/mentors/#{user.id}", params: updated
+
+      expect(response.status).to eq(404)
+      expect(JSON.parse(response.body)).to eq({"message" => "mentor not found by that id"})
+      expect(user.identities.first.title).to eq(@i_1.title)
+      expect(user.contact_details.phone).to eq(contact.phone)
+      expect(user.contact_details.slack).to eq(contact.slack)
+      expect(user.availabilities.first.morning).to eq(availability.morning)
+      expect(user.availabilities.first.afternoon).to eq(availability.afternoon)
+      expect(user.availabilities.first.evening).to eq(availability.evening)
+    end
+  end
+
   context 'with valid id, passing some attributes, adding to skills' do
     it 'returns the updated user' do
       user_contact = @user.contact_details

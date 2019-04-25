@@ -25,6 +25,27 @@ describe 'GET /mentors/:id', type: :request do
   end
 
   context 'passing a valid id' do
+    it 'does not return user if user is a mentor' do
+      user = User.create(
+        background: 'a',
+        cohort: 1810,
+        program: "BE",
+        first_name: "Jordan",
+        last_name: "l",
+        current_job: "Mcdonalds",
+        location: "Atlanta",
+        mentor: false
+      )
+      UserIdentity.create(user: user, identity_id: @i_1.id)
+      ContactDetails.create(email: "mail",phone:"2",slack:"@slack", user: user)
+      Availability.create(day_of_week: 0, morning: false, afternoon: false, evening: true, user: user)
+
+      get "/api/v1/mentors/#{user.id}"
+
+      expect(response.status).to eq(404)
+      expect(JSON.parse(response.body)).to eq({"message" => "mentor not found by that id"})
+    end
+
     it 'returns the mentee user' do
       availability = {
         "0" => [false, false, true],
