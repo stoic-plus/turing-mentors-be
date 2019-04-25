@@ -45,14 +45,8 @@ class ApplicationController < ActionController::API
     end
   end
 
-  def destroy_user(type, id)
-    user = User.find_by(id: id)
-    if user
-      User.destroy(user.id)
-      render nothing: true, status: 204
-    else
-      base = type == :mentor ? "mentor" : "mentee"
-      render json: {"message" => "#{base} not found by that id"}, status: 404
-    end
+  def destroy_user(type, user)
+    User.destroy(user.id)
+    render nothing: true, status: 204
   end
 end

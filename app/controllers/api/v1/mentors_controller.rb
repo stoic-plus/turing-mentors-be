@@ -17,7 +17,12 @@ class Api::V1::MentorsController < ApplicationController
   end
 
   def destroy
-    destroy_user(:mentor, params[:id])
+    mentor = User.find_by(id: params[:id], mentor: true)
+    if mentor
+      destroy_user(:mentor, mentor)
+    else
+      render json: {"message" => "mentor not found by that id"}, status: 404
+    end
   end
 
   private
