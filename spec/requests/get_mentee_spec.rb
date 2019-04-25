@@ -18,6 +18,33 @@ describe 'GET /mentees/:id', type: :request do
   end
 
   context 'passing a valid id' do
+    it 'does not return user if user is a mentor' do
+      user = User.create(
+        background: 'a',
+        cohort: 1810,
+        program: "BE",
+        first_name: "Jordan",
+        last_name: "l",
+        current_job: "Mcdonalds",
+        location: "Atlanta",
+        mentor: true
+      )
+      i_1 = Identity.create(title: 'male')
+      ts_1 = TechSkill.create(title: 'javascript')
+      nts_1 = NonTechSkill.create(title: 'stress management')
+      UserIdentity.create(user: @user, identity_id: i_1.id)
+      UserTechSkill.create(user: @user, tech_skill_id: ts_1.id)
+      UserNonTechSkill.create(user: @user, non_tech_skill_id: nts_1.id)
+      ContactDetails.create(email: "mail",phone:"2",slack:"@slack", user: user)
+      Availability.create(day_of_week: 0, morning: false, afternoon: false, evening: true, user: user)
+
+
+      get "/api/v1/mentees/#{user.id}"
+
+      expect(response.status).to eq(404)
+      expect(JSON.parse(response.body)).to eq({"message" => "mentee not found by that id"})
+    end
+
     it 'returns the mentee user' do
       availability = {
         "0" => [false, false, true],
