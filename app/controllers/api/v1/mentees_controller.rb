@@ -4,7 +4,12 @@ class Api::V1::MenteesController < ApplicationController
   end
 
   def show
-    get_user(:mentee, params[:id])
+    mentee = User.find_by(id: params[:id], mentor: false)
+    if mentee
+      serialize_user(:mentee, mentee)
+    else
+      render json: {"message" => "mentee not found by that id"}, status: 404
+    end
   end
 
   def update
