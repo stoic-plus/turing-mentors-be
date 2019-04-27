@@ -1,4 +1,8 @@
 class Api::V1::MenteesController < ApplicationController
+  def index
+    render json: MenteeSerializer.new(User.mentees), status: 200
+  end
+
   def create
     create_user(:mentee, mentee_params)
   end
