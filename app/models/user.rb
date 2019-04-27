@@ -1,5 +1,6 @@
 class User < ApplicationRecord
   scope :mentors, -> { where(mentor: true) }
+  scope :mentees, -> { where(mentor: false) }
   scope :denver_mentors, -> { mentors.where(location: "Denver, CO") }
   scope :remote_mentors, -> { mentors.where("location != 'Denver, CO'") }
   scope :and_tech_skills, -> { joins(:tech_skills) }
