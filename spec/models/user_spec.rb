@@ -17,6 +17,8 @@ describe User, type: :model do
     it {should have_many(:tech_skills).through(:user_tech_skills)}
     it {should have_many(:user_non_tech_skills)}
     it {should have_many(:non_tech_skills).through(:user_non_tech_skills)}
+    it {should have_many(:user_interests)}
+    it {should have_many(:interests).through(:user_interests)}
   end
 
   describe 'scopes' do
