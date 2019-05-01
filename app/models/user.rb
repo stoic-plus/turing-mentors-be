@@ -19,6 +19,7 @@ class User < ApplicationRecord
   has_many :tech_skills, through: :user_tech_skills
   has_many :user_non_tech_skills, dependent: :destroy
   has_many :non_tech_skills, through: :user_non_tech_skills
+  has_many :interests, through: :user_interests
 
   def list_skills(type)
     if type === :tech

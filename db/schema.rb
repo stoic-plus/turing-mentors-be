@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_04_06_201059) do
+ActiveRecord::Schema.define(version: 2019_05_01_231526) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -29,12 +29,16 @@ ActiveRecord::Schema.define(version: 2019_04_06_201059) do
     t.string "slack"
     t.string "linkedin"
     t.string "phone"
-    t.integer "preferred_method", default: 2
+    t.integer "preferred_method", default: 1
     t.bigint "user_id"
     t.index ["user_id"], name: "index_contact_details_on_user_id"
   end
 
   create_table "identities", force: :cascade do |t|
+    t.string "title"
+  end
+
+  create_table "interests", force: :cascade do |t|
     t.string "title"
   end
 
@@ -51,6 +55,13 @@ ActiveRecord::Schema.define(version: 2019_04_06_201059) do
     t.bigint "identity_id"
     t.index ["identity_id"], name: "index_user_identities_on_identity_id"
     t.index ["user_id"], name: "index_user_identities_on_user_id"
+  end
+
+  create_table "user_interests", force: :cascade do |t|
+    t.bigint "user_id"
+    t.bigint "interest_id"
+    t.index ["interest_id"], name: "index_user_interests_on_interest_id"
+    t.index ["user_id"], name: "index_user_interests_on_user_id"
   end
 
   create_table "user_non_tech_skills", force: :cascade do |t|
@@ -85,6 +96,8 @@ ActiveRecord::Schema.define(version: 2019_04_06_201059) do
   add_foreign_key "contact_details", "users"
   add_foreign_key "user_identities", "identities"
   add_foreign_key "user_identities", "users"
+  add_foreign_key "user_interests", "interests"
+  add_foreign_key "user_interests", "users"
   add_foreign_key "user_non_tech_skills", "non_tech_skills"
   add_foreign_key "user_non_tech_skills", "users"
   add_foreign_key "user_tech_skills", "tech_skills"
