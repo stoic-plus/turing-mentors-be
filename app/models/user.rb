@@ -42,6 +42,10 @@ class User < ApplicationRecord
     UserIdentity.joins(:identity).where("user_identities.user_id = ?", self.id).pluck(:title)
   end
 
+  def list_interests
+    UserInterest.joins(:interest).where("user_interests.user_id = ?", self.id).pluck(:title)
+  end
+
   def self.update_mentee(mentee, mentee_params)
     mentee_params.each do |attribute, value|
       next unless value
@@ -118,7 +122,9 @@ class User < ApplicationRecord
   def self.create_mentee_info(mentee_params, mentee)
     ContactDetails.for_user(mentee_params, mentee)
     UserIdentity.for_user(mentee_params[:identities].map(&:to_i), mentee)
+
     UserInterest.for_user(mentee_params[:interests].map(&:to_i), mentee)
+
     Availability.for_user(mentee_params[:availability], mentee)
   end
 
