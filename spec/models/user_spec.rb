@@ -175,6 +175,20 @@ describe User, type: :model do
       end
     end
 
+    context '#list_interests' do
+      it 'returns array of interest names' do
+        interest = Interest.create(title: "games")
+        interest_2 = Interest.create(title: "basketball")
+        user = User.create(first_name: 'Travis', last_name: 'Bee', cohort: 1810, program: 'FE', current_job: 'graduate', background: 'IT', mentor: true, location: 'Denver, CO')
+        user.interests << interest
+        user.interests << interest_2
+        actual = user.list_interests
+        expected = [interest.title, interest_2.title]
+
+        expect(actual).to eq(expected)
+      end
+    end
+
     context '#list_contact_details' do
       it 'returns a hash with contact type as key and string as value' do
         user = User.create(first_name: 'Travis', last_name: 'Bee', cohort: 1810, program: 'FE', current_job: 'graduate', background: 'IT', mentor: true, location: 'Denver, CO')

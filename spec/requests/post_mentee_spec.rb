@@ -5,8 +5,10 @@ describe 'POST /mentees', type: :request do
     Identity.create(title: 'male')
     Identity.create(title: 'parent')
     Identity.create(title: 'BOSS')
+
     Interest.create(title: 'rock climbing')
     Interest.create(title: 'skating')
+
     @user = {
       background: "...",
       cohort: 1810,
@@ -63,7 +65,7 @@ describe 'POST /mentees', type: :request do
       expect(response.status).to eq(200)
     end
 
-    xit 'creates neccesary rows in supporting tables for the created user' do
+    it 'creates neccesary rows in supporting tables for the created user' do
       expect(User.count).to eq(0)
       post '/api/v1/mentees', params: @user
 
