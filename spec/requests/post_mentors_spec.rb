@@ -10,6 +10,8 @@ describe 'POST /mentors', type: :request do
     NonTechSkill.create(title: 'stress management')
     NonTechSkill.create(title: 'public speaking')
     NonTechSkill.create(title: 'resumes')
+    Interest.create(title: 'rock climbing')
+    Interest.create(title: 'skating')
     @user = {
       background: "...",
       cohort: 1810,
@@ -20,6 +22,7 @@ describe 'POST /mentors', type: :request do
       first_name: "j",
       tech_skills: [1, 2, 4],
       non_tech_skills: [1, 2, 3],
+      interests: [1, 2],
       identities: [1],
       last_name: "l",
       phone: "720",
@@ -57,6 +60,7 @@ describe 'POST /mentors', type: :request do
       expect(created_user["tech_skills"]).to eq(tech_skills)
       expect(created_user["non_tech_skills"]).to eq(non_tech_skills)
       expect(created_user["identities"]).to eq(identities)
+      expect(created_user["interests"]).to eq(Interest.pluck(:title))
       expect(created_user["contact_details"]).to eq({
         "email" => @user[:email],
         "phone" => @user[:phone],
@@ -75,7 +79,7 @@ describe 'POST /mentors', type: :request do
       expect(response.status).to eq(200)
     end
 
-    xit 'creates neccesary rows in supporting tables for the created user' do
+    it 'creates neccesary rows in supporting tables for the created user' do
       expect(User.count).to eq(0)
       post '/api/v1/mentors', params: @user
 
@@ -85,6 +89,7 @@ describe 'POST /mentors', type: :request do
       expect(UserNonTechSkill.count).to eq(3)
       expect(UserIdentity.count).to eq(1)
       expect(Availability.count).to eq(7)
+      expect(Interest.count).to eq(2)
     end
 
     it 'returns error if not all user params are sent' do
