@@ -8,6 +8,10 @@ describe 'PUT /mentees', type: :request do
     @i_4 = Identity.create(title: 'biker')
     @i_5 = Identity.create(title: 'surfer')
     @i_6 = Identity.create(title: 'renegade')
+    @in_1 = Interest.create(title: 'rock climbing')
+    @in_2 = Interest.create(title: 'skating')
+    @in_3 = Interest.create(title: 'rock navigating')
+    @in_4 = Interest.create(title: 'skiing')
     @user = User.create(
       background: 'a',
       cohort: 1810,
@@ -18,7 +22,8 @@ describe 'PUT /mentees', type: :request do
     UserIdentity.create(user: @user, identity_id: @i_1.id)
     UserIdentity.create(user: @user, identity_id: i_2.id)
     UserIdentity.create(user: @user, identity_id: i_3.id)
-
+    UserInterest.create(interest_id: @in_1, user: @user)
+    UserInterest.create(interest_id: @in_2, user: @user)
     @contact = ContactDetails.create(email: "mail",phone:"2",slack:"@slack", user: @user)
     Availability.create(day_of_week: 0, morning: false, afternoon: false, evening: true, user: @user)
     Availability.create(day_of_week: 1, morning: true, afternoon: false, evening: false, user: @user)
@@ -83,9 +88,14 @@ describe 'PUT /mentees', type: :request do
 
   context 'with valid id and passing some attributes' do
     it 'returns the updated user' do
+      user_contact = @user.contact_details
+      expect(user_contact.phone).to eq(@contact.phone)
+      expect(user_contact.slack).to eq(@contact.slack)
+      expect(user.interests.count).to eq(2)
       updated = {
         phone: "510",
         slack: "@burgerzBoss",
+        interests: [@in_3, @in_4],
         availability: {
           "0" => false,
           "1" => false,
@@ -118,6 +128,7 @@ describe 'PUT /mentees', type: :request do
       expect(returned_user["email"]).to eq(@user[:email])
       expect(returned_user["first_name"]).to eq(@user[:first_name])
       expect(returned_user["identities"]).to eq(@user.identities.pluck(:title))
+      expect(returned_user["interests"]).to eq([@in_1.title,@in_2.title,@in_3.title,@in_4.title])
       expect(returned_user["last_name"]).to eq(@user[:last_name])
       expect(returned_user["mentor"]).to be_falsey
       expect(returned_user["contact_details"]["phone"]).to eq(updated[:phone])
