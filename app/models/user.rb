@@ -118,6 +118,7 @@ class User < ApplicationRecord
   def self.create_mentee_info(mentee_params, mentee)
     ContactDetails.for_user(mentee_params, mentee)
     UserIdentity.for_user(mentee_params[:identities].map(&:to_i), mentee)
+    UserInterest.for_user(mentee_params[:interests].map(&:to_i), mentee)
     Availability.for_user(mentee_params[:availability], mentee)
   end
 

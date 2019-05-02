@@ -47,6 +47,7 @@ class Api::V1::MenteesController < ApplicationController
     :phone,
     :slack,
     :identities => [],
+    :interests => [],
     :availability => {}
   )
   end
