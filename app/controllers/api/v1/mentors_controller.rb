@@ -52,6 +52,7 @@ class Api::V1::MentorsController < ApplicationController
     :tech_skills => [],
     :non_tech_skills => [],
     :identities => [],
+    :interests => [],
     :availability => {}
     )
   end

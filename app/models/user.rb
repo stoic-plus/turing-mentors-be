@@ -122,9 +122,7 @@ class User < ApplicationRecord
   def self.create_mentee_info(mentee_params, mentee)
     ContactDetails.for_user(mentee_params, mentee)
     UserIdentity.for_user(mentee_params[:identities].map(&:to_i), mentee)
-
     UserInterest.for_user(mentee_params[:interests].map(&:to_i), mentee)
-
     Availability.for_user(mentee_params[:availability], mentee)
   end
 
@@ -133,6 +131,7 @@ class User < ApplicationRecord
     UserIdentity.for_user(mentor_params[:identities].map(&:to_i), mentor)
     UserTechSkill.for_user(mentor_params[:tech_skills].map(&:to_i), mentor)
     UserNonTechSkill.for_user(mentor_params[:non_tech_skills].map(&:to_i), mentor)
+    UserInterest.for_user(mentor_params[:interests].map(&:to_i), mentor)
     Availability.for_user(mentor_params[:availability], mentor)
   end
 
