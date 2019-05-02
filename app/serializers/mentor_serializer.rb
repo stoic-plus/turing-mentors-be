@@ -7,6 +7,9 @@ class MentorSerializer
   attribute :non_tech_skills do |user|
     user.list_skills(:non_tech)
   end
+  attribute :interests do |user|
+    user.list_interests
+  end
   attribute :availability do |user|
     user.list_availability
   end

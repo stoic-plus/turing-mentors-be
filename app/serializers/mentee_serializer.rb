@@ -7,6 +7,9 @@ class MenteeSerializer
   attribute :identities do |user|
     user.list_identities
   end
+  attribute :interests do |user|
+    user.list_interests
+  end
   attribute :contact_details do |user|
     user.list_contact_details
   end
