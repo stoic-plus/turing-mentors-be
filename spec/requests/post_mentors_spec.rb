@@ -92,7 +92,7 @@ describe 'POST /mentors', type: :request do
       expect(Interest.count).to eq(2)
     end
 
-    it 'returns error if not all user params are sent' do
+    it 'returns error that specifies missing parameters if not all required user params are sent' do
       user = {
         background: "...",
         cohort: 1810,
@@ -107,7 +107,7 @@ describe 'POST /mentors', type: :request do
 
       expect(response.status).to eq(400)
       expect(response).to_not be_successful
-      expect(JSON.parse(response.body)).to eq({"message" => "incorrect user information supplied"})
+      expect(JSON.parse(response.body)).to eq({"message" => "insufficient user information supplied - missing : [location, non_tech_skills, interests, identities, last_name, phone, slack, availability]"})
     end
   end
 end
