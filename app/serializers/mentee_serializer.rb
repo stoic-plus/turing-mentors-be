@@ -8,9 +8,17 @@ class MenteeSerializer
     user.list_identities
   end
   attribute :interests do |user|
-    user.list_interests
+    if user.interests
+      user.list_interests
+    else
+      []
+    end
   end
   attribute :contact_details do |user|
-    user.list_contact_details
+    if user.contact_details
+      user.list_contact_details
+    else
+      []
+    end
   end
 end
