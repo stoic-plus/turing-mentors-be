@@ -22,8 +22,8 @@ describe 'PUT /mentees', type: :request do
     UserIdentity.create(user: @user, identity_id: @i_1.id)
     UserIdentity.create(user: @user, identity_id: i_2.id)
     UserIdentity.create(user: @user, identity_id: i_3.id)
-    UserInterest.create(interest_id: @in_1, user: @user)
-    UserInterest.create(interest_id: @in_2, user: @user)
+    UserInterest.create(interest_id: @in_1.id, user: @user)
+    UserInterest.create(interest_id: @in_2.id, user: @user)
     @contact = ContactDetails.create(email: "mail",phone:"2",slack:"@slack", user: @user)
     Availability.create(day_of_week: 0, morning: false, afternoon: false, evening: true, user: @user)
     Availability.create(day_of_week: 1, morning: true, afternoon: false, evening: false, user: @user)
@@ -91,11 +91,11 @@ describe 'PUT /mentees', type: :request do
       user_contact = @user.contact_details
       expect(user_contact.phone).to eq(@contact.phone)
       expect(user_contact.slack).to eq(@contact.slack)
-      expect(user.interests.count).to eq(2)
+      expect(@user.interests.count).to eq(2)
       updated = {
         phone: "510",
         slack: "@burgerzBoss",
-        interests: [@in_3, @in_4],
+        interests: [@in_3.id, @in_4.id],
         availability: {
           "0" => false,
           "1" => false,

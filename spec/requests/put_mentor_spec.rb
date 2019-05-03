@@ -27,8 +27,8 @@ describe 'PUT /mentors', type: :request do
     @nts_3 = NonTechSkill.create(title: 'public chanting')
     @nts_4 = NonTechSkill.create(title: 'public flogging')
     UserIdentity.create(user: @user, identity_id: @i_1.id)
-    UserInterest.create(interest_id: @in_1, user: @user)
-    UserInterest.create(interest_id: @in_2, user: @user)
+    UserInterest.create(interest_id: @in_1.id, user: @user)
+    UserInterest.create(interest_id: @in_2.id, user: @user)
     UserTechSkill.create(user: @user, tech_skill_id: @ts_1.id)
     UserNonTechSkill.create(user: @user, non_tech_skill_id: @nts_1.id)
 
@@ -96,7 +96,7 @@ describe 'PUT /mentors', type: :request do
         slack: "@burgerzBoss",
         tech_skills: [@ts_2.id],
         non_tech_skills: [@nts_2.id],
-        interests: [@in_3, @in_4],
+        interests: [@in_3.id, @in_4.id],
         availability: {
           "0" => false,
           "1" => false,

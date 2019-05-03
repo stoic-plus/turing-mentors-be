@@ -50,6 +50,7 @@ class User < ApplicationRecord
     mentee_params.each do |attribute, value|
       next unless value
       ContactDetails.update_for_user(mentee, attribute, value) and next if contact_attribute?(attribute)
+      UserInterest.update_for_user(mentee, value) and next if attribute == "interests"
       Availability.update_for_user(mentee, value) and next if attribute == "availability"
       UserIdentity.update_for_user(mentee, value) and next if attribute == "identities"
 
@@ -64,6 +65,7 @@ class User < ApplicationRecord
       ContactDetails.update_for_user(mentor, attribute, value) and next if contact_attribute?(attribute)
       Availability.update_for_user(mentor, value) and next if attribute == "availability"
       UserIdentity.update_for_user(mentor, value) and next if attribute == "identities"
+      UserInterest.update_for_user(mentor, value) and next if attribute == "interests"
       UserTechSkill.update_for_user(mentor, value) and next if attribute == "tech_skills"
       UserNonTechSkill.update_for_user(mentor, value) and next if attribute == "non_tech_skills"
 
