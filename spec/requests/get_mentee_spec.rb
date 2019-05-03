@@ -3,6 +3,8 @@ require 'rails_helper'
 describe 'GET /mentees/:id', type: :request do
   before :each do
     i_2 = Identity.create(title: 'parent')
+    @in_1 = Interest.create(title: 'rock climbing')
+    @in_2 = Interest.create(title: 'skating')
     @user = User.create(
       background: 'a',
       cohort: 1810,
@@ -11,7 +13,8 @@ describe 'GET /mentees/:id', type: :request do
       last_name: "l",
     )
     UserIdentity.create(user: @user, identity_id: i_2.id)
-
+    UserInterest.create(interest_id: @in_1.id, user: @user)
+    UserInterest.create(interest_id: @in_2.id, user: @user)
     @contact = ContactDetails.create(email: "mail",phone:"2",slack:"@slack", user: @user)
     Availability.create(day_of_week: 0, morning: false, afternoon: false, evening: true, user: @user)
     Availability.create(day_of_week: 1, morning: true, afternoon: false, evening: false, user: @user)
@@ -63,6 +66,7 @@ describe 'GET /mentees/:id', type: :request do
       expect(returned_user["contact_details"]["email"]).to eq(@contact.email)
       expect(returned_user["first_name"]).to eq(@user.first_name)
       expect(returned_user["identities"]).to eq(Identity.pluck(:title))
+      expect(returned_user["interests"]).to eq(Interest.pluck(:title))
       expect(returned_user["last_name"]).to eq(@user.last_name)
       expect(returned_user["contact_details"]["phone"]).to eq(@contact.phone)
       expect(returned_user["contact_details"]["slack"]).to eq(@contact.slack)
