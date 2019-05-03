@@ -17,6 +17,8 @@ describe User, type: :model do
     it {should have_many(:tech_skills).through(:user_tech_skills)}
     it {should have_many(:user_non_tech_skills)}
     it {should have_many(:non_tech_skills).through(:user_non_tech_skills)}
+    it {should have_many(:user_interests)}
+    it {should have_many(:interests).through(:user_interests)}
   end
 
   describe 'scopes' do
@@ -168,6 +170,20 @@ describe User, type: :model do
         user.identities << identity_2
         actual = user.list_identities
         expected = ["parent", "basketball person"]
+
+        expect(actual).to eq(expected)
+      end
+    end
+
+    context '#list_interests' do
+      it 'returns array of interest names' do
+        interest = Interest.create(title: "games")
+        interest_2 = Interest.create(title: "basketball")
+        user = User.create(first_name: 'Travis', last_name: 'Bee', cohort: 1810, program: 'FE', current_job: 'graduate', background: 'IT', mentor: true, location: 'Denver, CO')
+        user.interests << interest
+        user.interests << interest_2
+        actual = user.list_interests
+        expected = [interest.title, interest_2.title]
 
         expect(actual).to eq(expected)
       end

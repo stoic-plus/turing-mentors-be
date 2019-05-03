@@ -19,6 +19,8 @@ class User < ApplicationRecord
   has_many :tech_skills, through: :user_tech_skills
   has_many :user_non_tech_skills, dependent: :destroy
   has_many :non_tech_skills, through: :user_non_tech_skills
+  has_many :user_interests
+  has_many :interests, through: :user_interests
 
   def list_skills(type)
     if type === :tech
@@ -40,10 +42,15 @@ class User < ApplicationRecord
     UserIdentity.joins(:identity).where("user_identities.user_id = ?", self.id).pluck(:title)
   end
 
+  def list_interests
+    UserInterest.joins(:interest).where("user_interests.user_id = ?", self.id).pluck(:title)
+  end
+
   def self.update_mentee(mentee, mentee_params)
     mentee_params.each do |attribute, value|
       next unless value
       ContactDetails.update_for_user(mentee, attribute, value) and next if contact_attribute?(attribute)
+      UserInterest.update_for_user(mentee, value) and next if attribute == "interests"
       Availability.update_for_user(mentee, value) and next if attribute == "availability"
       UserIdentity.update_for_user(mentee, value) and next if attribute == "identities"
 
@@ -58,6 +65,7 @@ class User < ApplicationRecord
       ContactDetails.update_for_user(mentor, attribute, value) and next if contact_attribute?(attribute)
       Availability.update_for_user(mentor, value) and next if attribute == "availability"
       UserIdentity.update_for_user(mentor, value) and next if attribute == "identities"
+      UserInterest.update_for_user(mentor, value) and next if attribute == "interests"
       UserTechSkill.update_for_user(mentor, value) and next if attribute == "tech_skills"
       UserNonTechSkill.update_for_user(mentor, value) and next if attribute == "non_tech_skills"
 
@@ -116,6 +124,7 @@ class User < ApplicationRecord
   def self.create_mentee_info(mentee_params, mentee)
     ContactDetails.for_user(mentee_params, mentee)
     UserIdentity.for_user(mentee_params[:identities].map(&:to_i), mentee)
+    UserInterest.for_user(mentee_params[:interests].map(&:to_i), mentee)
     Availability.for_user(mentee_params[:availability], mentee)
   end
 
@@ -124,6 +133,7 @@ class User < ApplicationRecord
     UserIdentity.for_user(mentor_params[:identities].map(&:to_i), mentor)
     UserTechSkill.for_user(mentor_params[:tech_skills].map(&:to_i), mentor)
     UserNonTechSkill.for_user(mentor_params[:non_tech_skills].map(&:to_i), mentor)
+    UserInterest.for_user(mentor_params[:interests].map(&:to_i), mentor)
     Availability.for_user(mentor_params[:availability], mentor)
   end
 

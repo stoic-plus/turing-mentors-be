@@ -4,6 +4,10 @@ describe 'PUT /mentors', type: :request do
   before :each do
     @i_1 = Identity.create(title: 'female')
     @i_2 = Identity.create(title: 'dog owner')
+    @in_1 = Interest.create(title: 'rock climbing')
+    @in_2 = Interest.create(title: 'skating')
+    @in_3 = Interest.create(title: 'rock navigating')
+    @in_4 = Interest.create(title: 'skiing')
     @user = User.create(
       background: 'a',
       cohort: 1810,
@@ -23,6 +27,8 @@ describe 'PUT /mentors', type: :request do
     @nts_3 = NonTechSkill.create(title: 'public chanting')
     @nts_4 = NonTechSkill.create(title: 'public flogging')
     UserIdentity.create(user: @user, identity_id: @i_1.id)
+    UserInterest.create(interest_id: @in_1.id, user: @user)
+    UserInterest.create(interest_id: @in_2.id, user: @user)
     UserTechSkill.create(user: @user, tech_skill_id: @ts_1.id)
     UserNonTechSkill.create(user: @user, non_tech_skill_id: @nts_1.id)
 
@@ -77,18 +83,20 @@ describe 'PUT /mentors', type: :request do
     end
   end
 
-  context 'with valid id, passing some attributes, adding to skills' do
+  context 'with valid id, passing some attributes, adding to skills and interests' do
     it 'returns the updated user' do
       user_contact = @user.contact_details
       expect(user_contact.phone).to eq(@contact.phone)
       expect(user_contact.slack).to eq(@contact.slack)
       expect(@user.tech_skills.count).to eq(1)
       expect(@user.non_tech_skills.count).to eq(1)
+      expect(@user.interests.count).to eq(2)
       updated = {
         phone: "510",
         slack: "@burgerzBoss",
         tech_skills: [@ts_2.id],
         non_tech_skills: [@nts_2.id],
+        interests: [@in_3.id, @in_4.id],
         availability: {
           "0" => false,
           "1" => false,
@@ -111,7 +119,6 @@ describe 'PUT /mentors', type: :request do
       }
 
       put "/api/v1/mentors/#{@user.id}", params: updated
-
       expect(response.status).to eq(200)
       expect(response).to be_successful
       returned_user = JSON.parse(response.body)["data"]["attributes"]
@@ -125,6 +132,7 @@ describe 'PUT /mentors', type: :request do
       expect(returned_user["first_name"]).to eq(@user[:first_name])
       expect(returned_user["last_name"]).to eq(@user[:last_name])
       expect(returned_user["identities"]).to eq(@user.identities.pluck(:title))
+      expect(returned_user["interests"]).to eq([@in_1.title,@in_2.title,@in_3.title,@in_4.title])
       expect(returned_user["tech_skills"]).to eq([@ts_1.title, @ts_2.title])
       expect(returned_user["non_tech_skills"]).to eq([@nts_1.title, @nts_2.title])
       expect(returned_user["contact_details"]["phone"]).to eq(updated[:phone])

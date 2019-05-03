@@ -5,6 +5,10 @@ describe 'POST /mentees', type: :request do
     Identity.create(title: 'male')
     Identity.create(title: 'parent')
     Identity.create(title: 'BOSS')
+
+    Interest.create(title: 'rock climbing')
+    Interest.create(title: 'skating')
+
     @user = {
       background: "...",
       cohort: 1810,
@@ -12,6 +16,7 @@ describe 'POST /mentees', type: :request do
       email: "j@mail.com",
       first_name: "j",
       identities: [1, 2, 3],
+      interests: [1, 2],
       last_name: "l",
       phone: "720",
       slack: "@slack",
@@ -41,6 +46,7 @@ describe 'POST /mentees', type: :request do
       expect(created_user["background"]).to eq(@user[:background])
       expect(created_user["mentor"]).to be_falsey
       expect(created_user["identities"]).to eq(identities)
+      expect(created_user["interests"]).to eq(Interest.pluck(:title))
       expect(created_user["contact_details"]).to eq({
         "email" => @user[:email],
         "phone" => @user[:phone],
@@ -59,7 +65,7 @@ describe 'POST /mentees', type: :request do
       expect(response.status).to eq(200)
     end
 
-    xit 'creates neccesary rows in supporting tables for the created user' do
+    it 'creates neccesary rows in supporting tables for the created user' do
       expect(User.count).to eq(0)
       post '/api/v1/mentees', params: @user
 
@@ -67,6 +73,7 @@ describe 'POST /mentees', type: :request do
       expect(ContactDetails.count).to eq(1)
       expect(UserIdentity.count).to eq(3)
       expect(Availability.count).to eq(7)
+      expect(Interest.count).to eq(2)
     end
 
     it 'returns error if not all user params are sent' do
