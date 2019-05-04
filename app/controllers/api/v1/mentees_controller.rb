@@ -4,7 +4,9 @@ class Api::V1::MenteesController < ApplicationController
   end
 
   def create
-    create_user(:mentee, mentee_params)
+    missing_params = missing_params?(mentee_params)
+    return create_user(:mentee, mentee_params) unless missing_params
+    render json: {"message" => "insufficient user information supplied - missing : #{missing_params.to_s.gsub("\"", '')}"}, status: 400
   end
 
   def show
@@ -35,6 +37,26 @@ class Api::V1::MenteesController < ApplicationController
   end
 
   private
+
+  def missing_params?(params)
+    required =
+    [:background,
+     :cohort,
+     :program,
+     :email,
+     :first_name,
+     :identities,
+     :interests,
+     :last_name,
+     :phone,
+     :slack,
+     :availability ]
+    return false if params.keys.length == required.length
+    required.reduce([]) do |missing, param|
+      missing.push param unless params.keys.include?(param.to_s)
+      missing
+    end
+  end
 
   def mentee_params
     params.permit(
