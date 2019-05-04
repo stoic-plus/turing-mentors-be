@@ -76,12 +76,11 @@ describe 'POST /mentees', type: :request do
       expect(Interest.count).to eq(2)
     end
 
-    it 'returns error if not all user params are sent' do
+    it 'returns error that specifies missing parameters if not all required user params are sent' do
       user = {
         background: "...",
         cohort: 1810,
         program: "BE",
-        current_job: "Ibotta",
         email: "j@mail.com",
         first_name: "j",
       }
@@ -90,7 +89,13 @@ describe 'POST /mentees', type: :request do
 
       expect(response.status).to eq(400)
       expect(response).to_not be_successful
-      expect(JSON.parse(response.body)).to eq({"message" => "incorrect user information supplied"})
+      # identities
+      # interests
+      # last_name
+      # phone
+      # slack
+      # availability
+      expect(JSON.parse(response.body)).to eq({"message" => "insufficient user information supplied - missing : [background, cohort, program, current_job, email, first_name, tech_skills]"})
     end
   end
 end

@@ -107,7 +107,7 @@ describe 'POST /mentors', type: :request do
 
       expect(response.status).to eq(400)
       expect(response).to_not be_successful
-      expect(JSON.parse(response.body)).to eq({"message" => "insufficient user information supplied - missing : [background, cohort, program, current_job, email, first_name, tech_skills]"})
+      expect(JSON.parse(response.body)).to eq({"message" => "insufficient user information supplied - missing : [availability, identities, interests, last_name, location, non_tech_skills, phone, slack]"})
     end
   end
 end
