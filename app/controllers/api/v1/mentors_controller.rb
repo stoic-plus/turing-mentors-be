@@ -57,10 +57,11 @@ class Api::V1::MentorsController < ApplicationController
       :slack,
       :availability ]
     return false if params.keys.length == required.length
-    params.keys.reduce([]) do |missing, param|
-      missing.push param unless required.include?(param)
-      missing
-    end
+    required.select{|r_param| !params.keys.include?(r_param.to_s) }.map(&:to_s)
+    # params.keys.reduce([]) do |missing, param|
+    #   missing.push param unless required.include?(param)
+    #   missing
+    # end
   end
 
   def mentor_params
