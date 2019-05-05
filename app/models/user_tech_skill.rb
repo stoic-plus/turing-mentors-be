@@ -8,9 +8,9 @@ class UserTechSkill < ApplicationRecord
     end
   end
 
-  def self.update_for_user(user, skill_params)
-    current_skills = user.tech_skills.pluck(:id)
-    new_skills = skill_params.map(&:to_i).select {|tech_skill| !current_skills.include?(tech_skill)}
-    new_skills.each{|tech_skill| self.create(user_id: user.id, tech_skill_id: tech_skill)}
+  def self.update_for_user(user_id, skill_params)
+    current_skills = self.where(user_id: user_id).pluck(:id)
+    new_skills = skill_params.select {|tech_skill| !current_skills.include?(tech_skill)}
+    new_skills.each{|tech_skill| self.create(user_id: user_id, tech_skill_id: tech_skill)}
   end
 end

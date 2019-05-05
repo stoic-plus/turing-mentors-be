@@ -84,18 +84,11 @@ describe 'POST /mentees', type: :request do
         email: "j@mail.com",
         first_name: "j",
       }
-
       post '/api/v1/mentees', params: user
 
       expect(response.status).to eq(400)
       expect(response).to_not be_successful
-      # identities
-      # interests
-      # last_name
-      # phone
-      # slack
-      # availability
-      expect(JSON.parse(response.body)).to eq({"message" => "insufficient user information supplied - missing : [background, cohort, program, current_job, email, first_name, tech_skills]"})
+      expect(JSON.parse(response.body)).to eq({"message" => "insufficient user information supplied - missing : [availability, identities, interests, last_name, phone, slack]"})
     end
   end
 end
