@@ -49,9 +49,9 @@ class User < ApplicationRecord
 
   def self.update_mentee(mentee, mentee_params)
     mentee = User.find(mentee.id)
-    UserInfo.update(mentee.id, mentee_params)
+    UserInfo.update(mentee.id, :mentee, mentee_params)
     [:background, :cohort, :program, :first_name, :last_name].each do |attribute|
-      mentee.update(attribute => mentee_params[attribute].to_i) and next if mentee_params[attribute] && attribute == :cohort
+      mentee.update(attribute => mentee_params[attribute].to_i) if mentee_params[attribute] && attribute == :cohort
       mentee.update(attribute => mentee_params[attribute]) if mentee_params[attribute]
     end
   end
@@ -61,17 +61,11 @@ class User < ApplicationRecord
     # after_create -> { create_user_info(params) }
 
   def self.update_mentor(mentor, mentor_params)
-    mentor_params.each do |attribute, value|
-      next unless value
-      ContactDetails.update_for_user(mentor, attribute, value) and next if contact_attribute?(attribute)
-      Availability.update_for_user(mentor, value) and next if attribute == "availability"
-      UserIdentity.update_for_user(mentor, value) and next if attribute == "identities"
-      UserInterest.update_for_user(mentor, value) and next if attribute == "interests"
-      UserTechSkill.update_for_user(mentor, value) and next if attribute == "tech_skills"
-      UserNonTechSkill.update_for_user(mentor, value) and next if attribute == "non_tech_skills"
-
-      value = value.to_i if attribute == "cohort"
-      mentor.update(attribute.to_sym => value)
+    mentor = User.find(mentor.id)
+    UserInfo.update(mentor.id, :mentor, mentor_params)
+    [:background, :current_job, :location, :cohort, :program, :first_name, :last_name].each do |attribute|
+      mentor.update(attribute => mentor_params[attribute].to_i) if mentor_params[attribute] && attribute == :cohort
+      mentor.update(attribute => mentor_params[attribute]) if mentor_params[attribute]
     end
   end
 
