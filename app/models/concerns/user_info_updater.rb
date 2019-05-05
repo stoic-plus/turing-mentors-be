@@ -1,7 +1,4 @@
-# might be better to create a UserInfo class which itself has dependencies
-  # UserInfo has supporting tables as instance variable then gets passed to User
-
-require 'active_support'
+require 'active_support/concern'
 
 module UserInfoUpdater
   include ActiveSupport::Concern

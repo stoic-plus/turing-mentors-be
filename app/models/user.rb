@@ -50,10 +50,7 @@ class User < ApplicationRecord
   def self.update_mentee(mentee, mentee_params)
     mentee = User.find(mentee.id)
     UserInfoUpdater.update(mentee.id, :mentee, mentee_params)
-    [:background, :cohort, :program, :first_name, :last_name].each do |attribute|
-      mentee.update(attribute => mentee_params[attribute].to_i) if mentee_params[attribute] && attribute == :cohort
-      mentee.update(attribute => mentee_params[attribute]) if mentee_params[attribute]
-    end
+    user_attributes(:mentee).each {|attribute| update_user_attribute(mentee, mentee_params, attribute) }
   end
 
   # update mentee
@@ -63,10 +60,7 @@ class User < ApplicationRecord
   def self.update_mentor(mentor, mentor_params)
     mentor = User.find(mentor.id)
     UserInfoUpdater.update(mentor.id, :mentor, mentor_params)
-    [:background, :current_job, :location, :cohort, :program, :first_name, :last_name].each do |attribute|
-      mentor.update(attribute => mentor_params[attribute].to_i) if mentor_params[attribute] && attribute == :cohort
-      mentor.update(attribute => mentor_params[attribute]) if mentor_params[attribute]
-    end
+    user_attributes(:mentor).each {|attribute| update_user_attribute(mentor, mentor_params, attribute) }
   end
 
   def list_contact_details
@@ -133,6 +127,17 @@ class User < ApplicationRecord
   end
 
   private
+
+  def self.user_attributes(type)
+    attributes = [:background, :cohort, :program, :first_name, :last_name]
+    attributes.concat([:current_job, :location]) if type == :mentor
+    attributes
+  end
+
+  def self.update_user_attribute(user, params, attribute)
+    user.update(attribute => params[attribute].to_i) if params[attribute] && attribute == :cohort
+    user.update(attribute => params[attribute]) if params[attribute]
+  end
 
   def self.contact_attribute?(attribute)
     return true if attribute == "phone"
