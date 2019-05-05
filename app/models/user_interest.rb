@@ -8,9 +8,9 @@ class UserInterest < ApplicationRecord
     end
   end
 
-  def self.update_for_user(user, interest_params)
-    current_interests = user.interests.pluck(:id)
-    new_interests = interest_params.map(&:to_i).select {|interest| !current_interests.include?(interest)}
-    new_interests.each{|interest| UserInterest.create(user_id: user.id, interest_id: interest)}
+  def self.update_for_user(user_id, interest_params)
+    current_interests = self.where(user_id: user_id).pluck(:id)
+    new_interests = interest_params.select {|interest| !current_interests.include?(interest)}
+    new_interests.each{|interest| self.create(user_id: user_id, interest_id: interest)}
   end
 end
