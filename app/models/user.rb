@@ -1,5 +1,5 @@
 class User < ApplicationRecord
-  include UserInfo
+  include UserInfoUpdater
   scope :mentors, -> { where(mentor: true) }
   scope :mentees, -> { where(mentor: false) }
   scope :denver_mentors, -> { mentors.where(location: "Denver, CO") }
