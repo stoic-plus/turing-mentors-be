@@ -39,23 +39,9 @@ class Api::V1::MenteesController < ApplicationController
   private
 
   def missing_params?(params)
-    required =
-    [:background,
-     :cohort,
-     :program,
-     :email,
-     :first_name,
-     :identities,
-     :interests,
-     :last_name,
-     :phone,
-     :slack,
-     :availability ]
+    required = [:availability, :background, :cohort, :email, :first_name, :identities, :interests, :last_name, :phone, :program, :slack]
     return false if params.keys.length == required.length
-    required.reduce([]) do |missing, param|
-      missing.push param unless params.keys.include?(param.to_s)
-      missing
-    end
+    required.select{|r_param| !params.keys.include?(r_param.to_s) }.map(&:to_s)
   end
 
   def mentee_params

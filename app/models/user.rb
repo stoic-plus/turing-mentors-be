@@ -49,7 +49,7 @@ class User < ApplicationRecord
 
   def self.update_mentee(mentee, mentee_params)
     mentee = User.find(mentee.id)
-    UserInfo.update(mentee.id, :mentee, mentee_params)
+    UserInfoUpdater.update(mentee.id, :mentee, mentee_params)
     [:background, :cohort, :program, :first_name, :last_name].each do |attribute|
       mentee.update(attribute => mentee_params[attribute].to_i) if mentee_params[attribute] && attribute == :cohort
       mentee.update(attribute => mentee_params[attribute]) if mentee_params[attribute]
@@ -62,7 +62,7 @@ class User < ApplicationRecord
 
   def self.update_mentor(mentor, mentor_params)
     mentor = User.find(mentor.id)
-    UserInfo.update(mentor.id, :mentor, mentor_params)
+    UserInfoUpdater.update(mentor.id, :mentor, mentor_params)
     [:background, :current_job, :location, :cohort, :program, :first_name, :last_name].each do |attribute|
       mentor.update(attribute => mentor_params[attribute].to_i) if mentor_params[attribute] && attribute == :cohort
       mentor.update(attribute => mentor_params[attribute]) if mentor_params[attribute]

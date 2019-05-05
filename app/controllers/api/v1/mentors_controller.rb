@@ -40,28 +40,9 @@ class Api::V1::MentorsController < ApplicationController
   private
 
   def missing_params?(params)
-    required =
-    [:background,
-      :cohort,
-      :program,
-      :current_job,
-      :location,
-      :email,
-      :first_name,
-      :tech_skills,
-      :non_tech_skills,
-      :interests,
-      :identities,
-      :last_name,
-      :phone,
-      :slack,
-      :availability ]
+    required = [:availability, :background, :cohort, :current_job, :email, :first_name, :identities, :interests, :last_name, :location, :non_tech_skills, :phone, :program, :slack, :tech_skills]
     return false if params.keys.length == required.length
     required.select{|r_param| !params.keys.include?(r_param.to_s) }.map(&:to_s)
-    # params.keys.reduce([]) do |missing, param|
-    #   missing.push param unless required.include?(param)
-    #   missing
-    # end
   end
 
   def mentor_params
