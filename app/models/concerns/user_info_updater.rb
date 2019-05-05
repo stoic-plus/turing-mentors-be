@@ -3,18 +3,26 @@
 
 require 'active_support'
 
-module UserInfo
+module UserInfoUpdater
   include ActiveSupport::Concern
 
-  def self.update(mentee_id, mentee_params)
-    update_contact(mentee_id, mentee_params)
-    update_interests(mentee_id, mentee_params[:interests]) if mentee_params[:interests]
-    update_availability(mentee_id, mentee_params[:availability]) if mentee_params[:availability]
-    update_identities(mentee_id, mentee_params[:identities]) if mentee_params[:identities]
+  def self.update(user_id, user_type, user_params)
+    update_contact(user_id, user_params)
+    update_interests(user_id, user_params[:interests]) if user_params[:interests]
+    update_availability(user_id, user_params[:availability]) if user_params[:availability]
+    update_identities(user_id, user_params[:identities]) if user_params[:identities]
+
+    if user_type == :mentor
+      update_skills(user_id, :tech, user_params[:tech_skills]) if user_params[:tech_skills]
+      update_skills(user_id, :non_tech, user_params[:non_tech_skills]) if user_params[:non_tech_skills]
+    end
   end
 
-  def self.update_mentor(mentor, mentor_params)
+  private
 
+  def self.update_skills(user_id, type, skills)
+    UserTechSkill.update_for_user(user_id, skills.map(&:to_i)) if type == :tech
+    UserNonTechSkill.update_for_user(user_id, skills.map(&:to_i)) if type == :non_tech
   end
 
   def self.update_availability(user_id, availability_params)
@@ -29,8 +37,6 @@ module UserInfo
      end
      Availability.update_for_user(user_id, new_availability)
   end
-
-  private
 
   def self.update_identities(user_id, identities)
     UserIdentity.update_for_user(user_id, identities.map(&:to_i))
