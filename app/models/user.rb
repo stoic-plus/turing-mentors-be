@@ -1,4 +1,5 @@
 class User < ApplicationRecord
+  include UserInfo
   scope :mentors, -> { where(mentor: true) }
   scope :mentees, -> { where(mentor: false) }
   scope :denver_mentors, -> { mentors.where(location: "Denver, CO") }
@@ -47,17 +48,17 @@ class User < ApplicationRecord
   end
 
   def self.update_mentee(mentee, mentee_params)
-    mentee_params.each do |attribute, value|
-      next unless value
-      ContactDetails.update_for_user(mentee, attribute, value) and next if contact_attribute?(attribute)
-      UserInterest.update_for_user(mentee, value) and next if attribute == "interests"
-      Availability.update_for_user(mentee, value) and next if attribute == "availability"
-      UserIdentity.update_for_user(mentee, value) and next if attribute == "identities"
-
-      value = value.to_i if attribute == "cohort"
-      mentee.update(attribute.to_sym => value)
+    mentee = User.find(mentee.id)
+    UserInfo.update(mentee.id, mentee_params)
+    [:background, :cohort, :program, :first_name, :last_name].each do |attribute|
+      mentee.update(attribute => mentee_params[attribute].to_i) and next if mentee_params[attribute] && attribute == :cohort
+      mentee.update(attribute => mentee_params[attribute]) if mentee_params[attribute]
     end
   end
+
+  # update mentee
+    # remove and use concern instead
+    # after_create -> { create_user_info(params) }
 
   def self.update_mentor(mentor, mentor_params)
     mentor_params.each do |attribute, value|
