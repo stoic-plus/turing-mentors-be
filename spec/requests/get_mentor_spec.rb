@@ -28,7 +28,7 @@ describe 'GET /mentors/:id', type: :request do
   end
 
   context 'passing a valid id' do
-    it 'does not return user if user is a mentor' do
+    it 'does not return user if user is not a mentor' do
       user = User.create(
         background: 'a',
         cohort: 1810,

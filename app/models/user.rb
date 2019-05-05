@@ -1,4 +1,5 @@
 class User < ApplicationRecord
+  include UserInfoUpdater
   scope :mentors, -> { where(mentor: true) }
   scope :mentees, -> { where(mentor: false) }
   scope :denver_mentors, -> { mentors.where(location: "Denver, CO") }
@@ -47,31 +48,19 @@ class User < ApplicationRecord
   end
 
   def self.update_mentee(mentee, mentee_params)
-    mentee_params.each do |attribute, value|
-      next unless value
-      ContactDetails.update_for_user(mentee, attribute, value) and next if contact_attribute?(attribute)
-      UserInterest.update_for_user(mentee, value) and next if attribute == "interests"
-      Availability.update_for_user(mentee, value) and next if attribute == "availability"
-      UserIdentity.update_for_user(mentee, value) and next if attribute == "identities"
-
-      value = value.to_i if attribute == "cohort"
-      mentee.update(attribute.to_sym => value)
-    end
+    mentee = User.find(mentee.id)
+    UserInfoUpdater.update(mentee.id, :mentee, mentee_params)
+    user_attributes(:mentee).each {|attribute| update_user_attribute(mentee, mentee_params, attribute) }
   end
 
-  def self.update_mentor(mentor, mentor_params)
-    mentor_params.each do |attribute, value|
-      next unless value
-      ContactDetails.update_for_user(mentor, attribute, value) and next if contact_attribute?(attribute)
-      Availability.update_for_user(mentor, value) and next if attribute == "availability"
-      UserIdentity.update_for_user(mentor, value) and next if attribute == "identities"
-      UserInterest.update_for_user(mentor, value) and next if attribute == "interests"
-      UserTechSkill.update_for_user(mentor, value) and next if attribute == "tech_skills"
-      UserNonTechSkill.update_for_user(mentor, value) and next if attribute == "non_tech_skills"
+  # update mentee
+    # remove and use concern instead
+    # after_create -> { create_user_info(params) }
 
-      value = value.to_i if attribute == "cohort"
-      mentor.update(attribute.to_sym => value)
-    end
+  def self.update_mentor(mentor, mentor_params)
+    mentor = User.find(mentor.id)
+    UserInfoUpdater.update(mentor.id, :mentor, mentor_params)
+    user_attributes(:mentor).each {|attribute| update_user_attribute(mentor, mentor_params, attribute) }
   end
 
   def list_contact_details
@@ -138,6 +127,17 @@ class User < ApplicationRecord
   end
 
   private
+
+  def self.user_attributes(type)
+    attributes = [:background, :cohort, :program, :first_name, :last_name]
+    attributes.concat([:current_job, :location]) if type == :mentor
+    attributes
+  end
+
+  def self.update_user_attribute(user, params, attribute)
+    user.update(attribute => params[attribute].to_i) if params[attribute] && attribute == :cohort
+    user.update(attribute => params[attribute]) if params[attribute]
+  end
 
   def self.contact_attribute?(attribute)
     return true if attribute == "phone"

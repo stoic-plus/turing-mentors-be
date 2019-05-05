@@ -18,9 +18,11 @@ class ApplicationController < ActionController::API
   def update_user(type, user, params)
     if type == :mentor
       User.update_mentor(user, params)
+      user.reload
       render json: MentorSerializer.new(user), status: 200
     elsif type == :mentee
       User.update_mentee(user, params)
+      user.reload
       render json: MenteeSerializer.new(user), status: 200
     end
   end
