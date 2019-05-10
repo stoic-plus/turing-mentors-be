@@ -49,7 +49,9 @@ class User < ApplicationRecord
 
   def self.update_user(user, user_type, user_params)
     UserInfoUpdater.update(user.id, user_type, user_params)
-    user_attributes(user_type).each {|attribute| update_user_attribute(user_type, user_params, attribute) }
+    user_attributes(user_type).each do |attribute|
+      update_user_attribute(user, user_params[attribute], attribute) if user_params[attribute]
+    end
   end
 
   def list_contact_details
@@ -116,9 +118,9 @@ class User < ApplicationRecord
     attributes
   end
 
-  def self.update_user_attribute(user, params, attribute)
-    user.update(attribute => params[attribute].to_i) if params[attribute] && attribute == :cohort
-    user.update(attribute => params[attribute]) if params[attribute]
+  def self.update_user_attribute(user, new_attribute, attribute)
+    user.update(attribute => new_attribute.to_i) if attribute == :cohort
+    user.update(attribute => new_attribute)
   end
 
   def self.contact_attribute?(attribute)
