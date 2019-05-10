@@ -2,8 +2,6 @@ require 'active_support/concern'
 
 module UserInfoCreater
   include ActiveSupport::Concern
-  UserTechSkill.for_user(mentor_params[:tech_skills].map(&:to_i), mentor)
-  UserNonTechSkill.for_user(mentor_params[:non_tech_skills].map(&:to_i), mentor)
 
   def self.create(user, user_type, user_params)
     create_contact_info(user, user_params)
@@ -40,12 +38,16 @@ module UserInfoCreater
     end
   end
 
-  def self.create_tech_skills
-    attribute_ids(:tech_skills)
+  def self.create_tech_skills(user, user_params)
+    attribute_ids(user_params, :tech_skills).each do |tech_skill|
+      UserTechSkill.create(tech_skill_id: tech_skill, user: user)
+    end
   end
 
-  def self.create_non_tech_skills
-    attribute_ids(:nontech_skills)
+  def self.create_non_tech_skills(user, user_params)
+    attribute_ids(user_params, :non_tech_skills).each do |non_tech_skill|
+      UserNonTechSkill.create(non_tech_skill_id: non_tech_skill, user: user)
+    end
   end
 
   def self.create_availabilities(user, user_params)
