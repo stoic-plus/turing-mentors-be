@@ -98,24 +98,14 @@ describe 'PUT /mentors', type: :request do
         non_tech_skills: [@nts_2.id],
         interests: [@in_3.id, @in_4.id],
         availability: {
-          "0" => false,
-          "1" => false,
+          "0" => [true, false, false],
+          "1" => [true, false, false],
           "2" => [true, false, false],
           "3" => [true, false, false],
           "4" => [true, false, false],
           "5" => [true, false, false],
-          "6" => true
+          "6" => [true, true, true]
         }
-      }
-
-      return_availability = {
-        "0" => [false, false, false],
-        "1" => [false, false, false],
-        "2" => [true, false, false],
-        "3" => [true, false, false],
-        "4" => [true, false, false],
-        "5" => [true, false, false],
-        "6" => [true, true, true]
       }
 
       put "/api/v1/mentors/#{@user.id}", params: updated
@@ -137,7 +127,7 @@ describe 'PUT /mentors', type: :request do
       expect(returned_user["non_tech_skills"]).to eq([@nts_1.title, @nts_2.title])
       expect(returned_user["contact_details"]["phone"]).to eq(updated[:phone])
       expect(returned_user["contact_details"]["slack"]).to eq(updated[:slack])
-      expect(returned_user["availability"]).to eq(return_availability)
+      expect(returned_user["availability"]).to eq(updated[:availability])
     end
   end
 

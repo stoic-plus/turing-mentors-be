@@ -24,12 +24,7 @@ module UserInfoUpdater
 
   def self.update_availability(user_id, availability_params)
      new_availability = availability_params.to_h.reduce({}) do |new_avail, (day_of_week, availability)|
-       if availability.class == Array
-         new_avail[day_of_week.to_i] = availability.map{|period| period = ActiveModel::Type::Boolean.new.cast(period)}
-       else
-         updated = ActiveModel::Type::Boolean.new.cast(availability)
-         new_avail[day_of_week.to_i] = [updated, updated, updated]
-       end
+       new_avail[day_of_week.to_i] = availability.map{|period| ActiveModel::Type::Boolean.new.cast(period)}
        new_avail
      end
      Availability.update_for_user(user_id, new_availability)

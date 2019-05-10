@@ -97,24 +97,14 @@ describe 'PUT /mentees', type: :request do
         slack: "@burgerzBoss",
         interests: [@in_3.id, @in_4.id],
         availability: {
-          "0" => false,
-          "1" => false,
+          "0" => [false, false, false],
+          "1" => [false, false, false],
           "2" => [true, false, false],
           "3" => [true, false, false],
           "4" => [true, false, false],
           "5" => [true, false, false],
-          "6" => true
+          "6" => [true, false, true]
         }
-      }
-
-      return_availability = {
-        "0" => [false, false, false],
-        "1" => [false, false, false],
-        "2" => [true, false, false],
-        "3" => [true, false, false],
-        "4" => [true, false, false],
-        "5" => [true, false, false],
-        "6" => [true, true, true]
       }
 
       put "/api/v1/mentees/#{@user.id}", params: updated
@@ -133,7 +123,7 @@ describe 'PUT /mentees', type: :request do
       expect(returned_user["mentor"]).to be_falsey
       expect(returned_user["contact_details"]["phone"]).to eq(updated[:phone])
       expect(returned_user["contact_details"]["slack"]).to eq(updated[:slack])
-      expect(returned_user["availability"]).to eq(return_availability)
+      expect(returned_user["availability"]).to eq(updated[:availability])
     end
   end
 
