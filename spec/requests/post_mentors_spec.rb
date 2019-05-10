@@ -29,7 +29,7 @@ describe 'POST /mentors', type: :request do
       slack: "@slack",
       availability: {
         0 => [true, false, true],
-        1 => true,
+        1 => [true, true, true],
         2 => [true, false, false],
         3 => [true, false, true],
         4 => [false, false, true],
@@ -68,7 +68,7 @@ describe 'POST /mentors', type: :request do
       })
       expect(created_user["availability"]).to eq({
         "0" => @user[:availability][0],
-        "1" => [true,true,true],
+        "1" => @user[:availability][1],
         "2" => @user[:availability][2],
         "3" => @user[:availability][3],
         "4" => @user[:availability][4],
