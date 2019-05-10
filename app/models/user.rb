@@ -7,7 +7,6 @@ class User < ApplicationRecord
   scope :remote_mentors, -> { mentors.where("location != 'Denver, CO'") }
   scope :and_tech_skills, -> { joins(:tech_skills) }
   scope :tech_skilled_in, ->(languages) { and_tech_skills.where("tech_skills.title": languages).uniq }
-
   validates_presence_of :first_name,
                         :last_name,
                         :current_job,
@@ -75,6 +74,7 @@ class User < ApplicationRecord
   end
 
   def self.new_mentee(attributes)
+
     mentee_attributes = {
       first_name: attributes[:first_name],
       last_name: attributes[:last_name],
@@ -105,14 +105,7 @@ class User < ApplicationRecord
   end
 
   def self.create_mentor_info(mentor_params, mentor)
-    ContactDetails.for_user(mentor_params, mentor)
-    UserIdentity.for_user(mentor_params[:identities].map(&:to_i), mentor)
-
-    UserTechSkill.for_user(mentor_params[:tech_skills].map(&:to_i), mentor)
-    UserNonTechSkill.for_user(mentor_params[:non_tech_skills].map(&:to_i), mentor)
-    
-    UserInterest.for_user(mentor_params[:interests].map(&:to_i), mentor)
-    Availability.for_user(mentor_params[:availability], mentor)
+    UserInfoCreater.create(mentor, :mentor, mentor_params)
   end
 
   private
