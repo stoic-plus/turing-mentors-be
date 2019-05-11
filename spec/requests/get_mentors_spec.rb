@@ -5,6 +5,7 @@ describe 'GET /mentors', type: :request do
     @t_1 = TechSkill.create(title: 'javascript')
     @t_2 = TechSkill.create(title: 'ruby')
     @t_3 = TechSkill.create(title: 'python')
+    
     @u_1 = User.create(first_name: 'Travis', last_name: ' Gee', cohort: 1810, program: 'FE', current_job: 'google', background: 'IT', mentor: true, location: 'Denver, CO')
     UserTechSkill.create(user_id: @u_1.id, tech_skill_id: @t_2.id)
     ContactDetails.create(email: 't@mail.com', slack: 's1', phone: 'p1', user: @u_1)

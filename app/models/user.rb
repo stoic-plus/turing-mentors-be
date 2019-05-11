@@ -1,12 +1,12 @@
 class User < ApplicationRecord
   include UserInfoUpdater
+  include UserInfoCreater
   scope :mentors, -> { where(mentor: true) }
   scope :mentees, -> { where(mentor: false) }
   scope :denver_mentors, -> { mentors.where(location: "Denver, CO") }
   scope :remote_mentors, -> { mentors.where("location != 'Denver, CO'") }
   scope :and_tech_skills, -> { joins(:tech_skills) }
   scope :tech_skilled_in, ->(languages) { and_tech_skills.where("tech_skills.title": languages).uniq }
-
   validates_presence_of :first_name,
                         :last_name,
                         :current_job,
@@ -47,20 +47,11 @@ class User < ApplicationRecord
     UserInterest.joins(:interest).where("user_interests.user_id = ?", self.id).pluck(:title)
   end
 
-  def self.update_mentee(mentee, mentee_params)
-    mentee = User.find(mentee.id)
-    UserInfoUpdater.update(mentee.id, :mentee, mentee_params)
-    user_attributes(:mentee).each {|attribute| update_user_attribute(mentee, mentee_params, attribute) }
-  end
-
-  # update mentee
-    # remove and use concern instead
-    # after_create -> { create_user_info(params) }
-
-  def self.update_mentor(mentor, mentor_params)
-    mentor = User.find(mentor.id)
-    UserInfoUpdater.update(mentor.id, :mentor, mentor_params)
-    user_attributes(:mentor).each {|attribute| update_user_attribute(mentor, mentor_params, attribute) }
+  def self.update_user(user, user_type, user_params)
+    UserInfoUpdater.update(user.id, user_type, user_params)
+    user_attributes(user_type).each do |attribute|
+      update_user_attribute(user, user_params[attribute], attribute) if user_params[attribute]
+    end
   end
 
   def list_contact_details
@@ -85,6 +76,7 @@ class User < ApplicationRecord
   end
 
   def self.new_mentee(attributes)
+
     mentee_attributes = {
       first_name: attributes[:first_name],
       last_name: attributes[:last_name],
@@ -111,19 +103,11 @@ class User < ApplicationRecord
   end
 
   def self.create_mentee_info(mentee_params, mentee)
-    ContactDetails.for_user(mentee_params, mentee)
-    UserIdentity.for_user(mentee_params[:identities].map(&:to_i), mentee)
-    UserInterest.for_user(mentee_params[:interests].map(&:to_i), mentee)
-    Availability.for_user(mentee_params[:availability], mentee)
+    UserInfoCreater.create(mentee, :mentee, mentee_params)
   end
 
   def self.create_mentor_info(mentor_params, mentor)
-    ContactDetails.for_user(mentor_params, mentor)
-    UserIdentity.for_user(mentor_params[:identities].map(&:to_i), mentor)
-    UserTechSkill.for_user(mentor_params[:tech_skills].map(&:to_i), mentor)
-    UserNonTechSkill.for_user(mentor_params[:non_tech_skills].map(&:to_i), mentor)
-    UserInterest.for_user(mentor_params[:interests].map(&:to_i), mentor)
-    Availability.for_user(mentor_params[:availability], mentor)
+    UserInfoCreater.create(mentor, :mentor, mentor_params)
   end
 
   private
@@ -134,9 +118,9 @@ class User < ApplicationRecord
     attributes
   end
 
-  def self.update_user_attribute(user, params, attribute)
-    user.update(attribute => params[attribute].to_i) if params[attribute] && attribute == :cohort
-    user.update(attribute => params[attribute]) if params[attribute]
+  def self.update_user_attribute(user, new_attribute, attribute)
+    user.update(attribute => new_attribute.to_i) if attribute == :cohort
+    user.update(attribute => new_attribute)
   end
 
   def self.contact_attribute?(attribute)
