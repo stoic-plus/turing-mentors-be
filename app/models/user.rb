@@ -3,15 +3,14 @@ class User < ApplicationRecord
   include UserInfoCreater
   scope :mentors, -> { where(mentor: true) }
   scope :mentees, -> { where(mentor: false) }
-  scope :denver_mentors, -> { mentors.where(location: "Denver, CO") }
-  scope :remote_mentors, -> { mentors.where("location != 'Denver, CO'") }
+  # scope :denver_mentors, -> { mentors.where(location: "Denver, CO") }
+  # scope :remote_mentors, -> { mentors.where("location != 'Denver, CO'") }
   scope :and_tech_skills, -> { joins(:tech_skills) }
   scope :tech_skilled_in, ->(languages) { and_tech_skills.where("tech_skills.title": languages).uniq }
   validates_presence_of :first_name,
                         :last_name,
                         :current_job,
-                        :background,
-                        :location
+                        :background
   has_one :contact_details, dependent: :destroy
   has_many :availabilities, dependent: :destroy
   has_many :user_identities, dependent: :destroy
