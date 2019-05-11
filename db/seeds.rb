@@ -1,93 +1,207 @@
-User.destroy_all
-Availability.destroy_all
-ContactDetails.destroy_all
-Identity.destroy_all
-NonTechSkill.destroy_all
-TechSkill.destroy_all
-UserIdentity.destroy_all
-UserNonTechSkill.destroy_all
-UserTechSkill.destroy_all
+require "pry"
+binding.pry
+# User.destroy_all
+# Availability.destroy_all
+# ContactDetails.destroy_all
+# Identity.destroy_all
+# NonTechSkill.destroy_all
+# TechSkill.destroy_all
+# UserIdentity.destroy_all
+# UserNonTechSkill.destroy_all
+# UserTechSkill.destroy_all
+#
+#
+# i_1 = Identity.create(title: 'Male')
+# i_2 = Identity.create(title: 'Female')
+# i_3 = Identity.create(title: 'Non-Binary')
+# i_4 = Identity.create(title: 'Parent')
+#
+# in_1 = Interest.create(title: "3d Printing")
+# in_2 = Interest.create(title: "Anime")
+# in_3 = Interest.create(title: "Astronomy")
+# in_4 = Interest.create(title: "Automotive")
+# in_5 = Interest.create(title: "Blogging / Writing / Poetry")
+# in_6 = Interest.create(title: "Board Games")
+# in_7 = Interest.create(title: "Coding")
+# in_8 = Interest.create(title: "Collecting")
+# in_9 = Interest.create(title: "Cooking")
+# in_10 = Interest.create(title: "Crafts")
+# in_11 = Interest.create(title: "Cycling")
+# in_12 = Interest.create(title: "Dancing")
+# in_13 = Interest.create(title: "Drawing")
+# in_14 = Interest.create(title: "Drone")
+# in_15 = Interest.create(title: "Ecology")
+# in_16 = Interest.create(title: "Fishing")
+# in_17 = Interest.create(title: "Gardening")
+# in_18 = Interest.create(title: "Hiking")
+# in_19 = Interest.create(title: "Knitting")
+# in_20 = Interest.create(title: "Languages")
+# in_21 = Interest.create(title: "Martial Arts")
+# in_22 = Interest.create(title: "Mountain / Rock Climbing")
+# in_23 = Interest.create(title: "Movies / TV Shows")
+# in_24 = Interest.create(title: "Music / Podcast")
+# in_25 = Interest.create(title: "Musical Instruments")
+# in_26 = Interest.create(title: "Painting")
+# in_27 = Interest.create(title: "Philosophy")
+# in_28 = Interest.create(title: "Photography")
+# in_29 = Interest.create(title: "Psychology")
+# in_30 = Interest.create(title: "Reading")
+# in_31 = Interest.create(title: "Running")
+# in_32 = Interest.create(title: "Singing")
+# in_33 = Interest.create(title: "Skiiing / Snowboarding")
+# in_34 = Interest.create(title: "Sports")
+# in_35 = Interest.create(title: "Swimming")
+# in_36 = Interest.create(title: "Traveling")
+# in_37 = Interest.create(title: "Video Games")
+# in_38 = Interest.create(title: "Volunteering")
+# in_39 = Interest.create(title: "Working Out")
+# in_40 = Interest.create(title: "Yoga")
+#
+# t_1 = TechSkill.create(title: 'Ruby')
+# t_2 = TechSkill.create(title: 'Javascript')
+# t_3 = TechSkill.create(title: 'Python')
+# t_4 = TechSkill.create(title: 'Java')
+# t_5 = TechSkill.create(title: 'Elixir')
+# t_6 = TechSkill.create(title: 'C')
+# t_7 = TechSkill.create(title: 'PHP')
+# t_8 = TechSkill.create(title: 'Swift')
+# t_9 = TechSkill.create(title: 'SQL')
+# t_10 = TechSkill.create(title: 'C++')
+#
+# nt_1 = NonTechSkill.create(title: 'Stress Management')
+# nt_2 = NonTechSkill.create(title: 'Public Speaking')
+# nt_3 = NonTechSkill.create(title: 'Resumes')
+# nt_4 = NonTechSkill.create(title: 'Technical Interviews')
+# nt_5 = NonTechSkill.create(title: 'Parenting')
+# nt_6 = NonTechSkill.create(title: 'Wellness')
+#
 
-i_1 = Identity.create(title: 'male')
-i_2 = Identity.create(title: 'female')
-i_3 = Identity.create(title: 'non-binary')
+COHORTS = ("15".."19").each.reduce([]) do |cohorts, year|
+  ("01".."11").each do |month|
+    cohort = year + month
+    cohorts.push cohort
+  end
+  cohorts
+end
 
-@t_1 = TechSkill.create(title: 'ruby')
-@t_2 = TechSkill.create(title: 'javascript')
-@t_3 = TechSkill.create(title: 'python')
-@t_4 = TechSkill.create(title: 'java')
-@t_5 = TechSkill.create(title: 'elixir')
-@t_6 = TechSkill.create(title: 'c')
-@t_7 = TechSkill.create(title: 'php')
-@t_8 = TechSkill.create(title: 'swift')
-@t_9 = TechSkill.create(title: 'sql')
+QUOTES = [Faker::TvShows::RickAndMorty, Faker::TvShows::SiliconValley, Faker::TvShows::DumbAndDumber]
+STATE_ABBREVS = ["AL","AK","AZ","AR","CA","CO","CT","DE","DC","FL","GA","HI","ID","IL","IN","IA","KS","KY","LA","ME","MD","MA","MI","MN","MS","MO","MT","NE","NV","NH","NJ","NM","NY","NC","ND","OH","OK","OR","PA","RI","SC","SD","TN","TX","UT","VT","VA","WA","WV","WI","WY"]
+def create_users(amount, type)
+  binding.pry
+  # amount.times do
+    # 0-2 - if 2 just name
+    gender = rand(0..2)
+    first_n = Faker::Name.female_first_name if gender == 0
+    first_n = Faker::Name.male_first_name if gender == 1
+    first_n = Faker::Name.name.split(" ")[0] if gender == 2
+    last_n = Faker::Name.last_name
+    slack = "@#{first_n}"
+    cohort = COHORTS[rand(0..COHORTS.length - 1)]
+    program = rand(0..1) == 0 ? "FE" : "BE"
 
-@nt_1 = NonTechSkill.create(title: 'stress management')
-@nt_2 = NonTechSkill.create(title: 'public speaking')
-@nt_3 = NonTechSkill.create(title: 'resumes')
-@nt_4 = NonTechSkill.create(title: 'technical interviews')
-@nt_5 = NonTechSkill.create(title: 'parenting')
-@nt_6 = NonTechSkill.create(title: 'wellness')
+    current_job = type == :mentor ? Faker::Company.name : nil
+    background = QUOTES.sample.send(:quote)
+    city = Faker::Address.city
+    state = STATE_ABBREVS.sample
+    email = Faker::Internet.email
+    phone = Faker::PhoneNumber.cell_phone
+    # create identity based on gender
+    (1..5).map{ rand(1..32) }.each do |interest_id|
+      # UserInterest.create()
+    end
+    days_avail = []
+    rand(1..5).times do
+      day = rand(0..6)
+      until !days_avail.include?(day) do day = rand(0..6) end
+      days_avail.push day
+    end
+
+    days_avail.each do |day|
+      availability = (1..3).map{ rand(0..1) == 0 ? true : false }
+      # Availability.create(day, )
+    end
+
+    # if cohort == fe create JS else Ruby
+    t_skills = []
+    rand(1..5).times do
+      t_skill = rand(3..10)
+      until !t_skills.include?(t_skill) do t_skill = rand(3..10) end
+      t_skills.push t_skill
+    end
+    # t_skills.each {|skill| UserTechSkill }
+
+    nt_skills = []
+    rand(2..5).times do
+      nt_skill = rand(1..6)
+      until !nt_skills.include?(nt_skill) do nt_skill = rand(1..6) end
+      nt_skills.push nt_skill
+    end
+    # nt_skills.each {|nt_skill| UserNonTechSkill }
+
+  @u_1 = User.create(first_name: 'Travy', last_name: 'Gee', cohort: 1810, program: 'FE', current_job: 'google', background: 'IT', mentor: true, location: 'Denver, CO')
+end
+
+create_users(2, :mentor)
 
 @u_1 = User.create(first_name: 'Travy', last_name: 'Gee', cohort: 1810, program: 'FE', current_job: 'google', background: 'IT', mentor: true, location: 'Denver, CO')
-@u_2 = User.create(first_name: 'Bob', last_name: 'Gee', cohort: 1810, program: 'FE', current_job: 'google', background: 'IT', mentor: true, location: 'New York, CO')
-@u_3 = User.create(first_name: 'Jordan', last_name: 'Gee', cohort: 1810, program: 'FE', current_job: 'google', background: 'IT', mentor: true, location: 'New York, NY')
-@u_4 = User.create(first_name: 'J', last_name: 'J', cohort: 1810, program: 'FE', current_job: 'google', background: 'IT', mentor: true, location: 'Denver, CO')
+# @u_2 = User.create(first_name: 'Bob', last_name: 'Gee', cohort: 1810, program: 'FE', current_job: 'google', background: 'IT', mentor: true, location: 'New York, CO')
+# @u_3 = User.create(first_name: 'Jordan', last_name: 'Gee', cohort: 1810, program: 'FE', current_job: 'google', background: 'IT', mentor: true, location: 'New York, NY')
+# @u_4 = User.create(first_name: 'J', last_name: 'J', cohort: 1810, program: 'FE', current_job: 'google', background: 'IT', mentor: true, location: 'Denver, CO')
+#
+# @u_5 = User.create(first_name: 'Fera', last_name: 'dabre', cohort: 1810, program: 'FE', current_job: 'google', background: 'IT', mentor: false, location: 'Denver, CO')
+# @u_6 = User.create(first_name: 'BoFerb', last_name: 'darla', cohort: 1803, program: 'FE', current_job: 'google', background: 'IT', mentor: false, location: 'New York, CO')
+# @u_7 = User.create(first_name: 'Jaja', last_name: 'dava', cohort: 1801, program: 'FE', current_job: 'google', background: 'IT', mentor: false, location: 'New York, NY')
+# @u_8 = User.create(first_name: 'Jeraul', last_name: 'Jameson', cohort: 1410, program: 'FE', current_job: 'google', background: 'IT', mentor: false, location: 'Denver, CO')
 
-@u_5 = User.create(first_name: 'Fera', last_name: 'dabre', cohort: 1810, program: 'FE', current_job: 'google', background: 'IT', mentor: false, location: 'Denver, CO')
-@u_6 = User.create(first_name: 'BoFerb', last_name: 'darla', cohort: 1803, program: 'FE', current_job: 'google', background: 'IT', mentor: false, location: 'New York, CO')
-@u_7 = User.create(first_name: 'Jaja', last_name: 'dava', cohort: 1801, program: 'FE', current_job: 'google', background: 'IT', mentor: false, location: 'New York, NY')
-@u_8 = User.create(first_name: 'Jeraul', last_name: 'Jameson', cohort: 1410, program: 'FE', current_job: 'google', background: 'IT', mentor: false, location: 'Denver, CO')
-
-# mentors
-UserIdentity.create(user: @u_1, identity_id: i_2.id)
-UserIdentity.create(user: @u_2, identity_id: i_1.id)
-UserIdentity.create(user: @u_3, identity_id: i_3.id)
-UserIdentity.create(user: @u_4, identity_id: i_3.id)
-# mentees
-UserIdentity.create(user: @u_5, identity_id: i_2.id)
-UserIdentity.create(user: @u_6, identity_id: i_1.id)
-UserIdentity.create(user: @u_7, identity_id: i_3.id)
-UserIdentity.create(user: @u_8, identity_id: i_3.id)
-
-UserTechSkill.create(user_id: @u_1.id, tech_skill_id: @t_2.id)
-UserTechSkill.create(user_id: @u_2.id, tech_skill_id: @t_2.id)
-UserTechSkill.create(user_id: @u_3.id, tech_skill_id: @t_1.id)
-UserTechSkill.create(user_id: @u_4.id, tech_skill_id: @t_1.id)
-UserTechSkill.create(user_id: @u_4.id, tech_skill_id: @t_3.id)
-
-UserNonTechSkill.create(user_id: @u_1.id, non_tech_skill_id: @nt_1.id)
-UserNonTechSkill.create(user_id: @u_2.id, non_tech_skill_id: @nt_2.id)
-UserNonTechSkill.create(user_id: @u_3.id, non_tech_skill_id: @nt_3.id)
-UserNonTechSkill.create(user_id: @u_4.id, non_tech_skill_id: @nt_1.id)
-UserNonTechSkill.create(user_id: @u_4.id, non_tech_skill_id: @nt_3.id)
-
-Availability.create(day_of_week: 0, morning: false, afternoon: false, evening: true, user: @u_1)
-Availability.create(day_of_week: 1, morning: false, afternoon: false, evening: true, user: @u_1)
-Availability.create(day_of_week: 3, morning: false, afternoon: false, evening: true, user: @u_1)
-Availability.create(day_of_week: 4, morning: false, afternoon: false, evening: true, user: @u_1)
-Availability.create(day_of_week: 6, morning: false, afternoon: false, evening: true, user: @u_1)
-
-Availability.create(day_of_week: 0, morning: false, afternoon: false, evening: true, user: @u_2)
-Availability.create(day_of_week: 1, morning: false, afternoon: false, evening: true, user: @u_2)
-Availability.create(day_of_week: 3, morning: false, afternoon: false, evening: true, user: @u_2)
-Availability.create(day_of_week: 5, morning: false, afternoon: false, evening: true, user: @u_2)
-
-Availability.create(day_of_week: 0, morning: false, afternoon: false, evening: true, user: @u_3)
-Availability.create(day_of_week: 2, morning: false, afternoon: false, evening: true, user: @u_3)
-Availability.create(day_of_week: 4, morning: false, afternoon: false, evening: true, user: @u_3)
-Availability.create(day_of_week: 6, morning: false, afternoon: false, evening: true, user: @u_3)
-
-Availability.create(day_of_week: 0, morning: false, afternoon: false, evening: true, user: @u_4)
-Availability.create(day_of_week: 1, morning: false, afternoon: false, evening: true, user: @u_4)
-Availability.create(day_of_week: 2, morning: false, afternoon: false, evening: true, user: @u_4)
-Availability.create(day_of_week: 3, morning: false, afternoon: false, evening: true, user: @u_4)
-Availability.create(day_of_week: 4, morning: false, afternoon: false, evening: true, user: @u_4)
-Availability.create(day_of_week: 5, morning: false, afternoon: false, evening: true, user: @u_4)
-Availability.create(day_of_week: 6, morning: false, afternoon: false, evening: true, user: @u_4)
-
-
-ContactDetails.create(email: 't@mail.com', slack: 's1', phone: 'p1', user: @u_1)
-ContactDetails.create(email: 'tv@mail.com', slack: 's2', phone: 'p2', user: @u_2)
-ContactDetails.create(email: 'jor@mail.com', slack: 's3', phone: 'p3', user: @u_3)
-ContactDetails.create(email: 'j@mail.com', slack: 's4', phone: 'p4', user: @u_4)
+# # mentors
+# UserIdentity.create(user: @u_1, identity_id: i_2.id)
+# UserIdentity.create(user: @u_2, identity_id: i_1.id)
+# UserIdentity.create(user: @u_3, identity_id: i_3.id)
+# UserIdentity.create(user: @u_4, identity_id: i_3.id)
+# # mentees
+# UserIdentity.create(user: @u_5, identity_id: i_2.id)
+# UserIdentity.create(user: @u_6, identity_id: i_1.id)
+# UserIdentity.create(user: @u_7, identity_id: i_3.id)
+# UserIdentity.create(user: @u_8, identity_id: i_3.id)
+#
+# UserTechSkill.create(user_id: @u_1.id, tech_skill_id: @t_2.id)
+# UserTechSkill.create(user_id: @u_2.id, tech_skill_id: @t_2.id)
+# UserTechSkill.create(user_id: @u_3.id, tech_skill_id: @t_1.id)
+# UserTechSkill.create(user_id: @u_4.id, tech_skill_id: @t_1.id)
+# UserTechSkill.create(user_id: @u_4.id, tech_skill_id: @t_3.id)
+#
+# UserNonTechSkill.create(user_id: @u_1.id, non_tech_skill_id: @nt_1.id)
+# UserNonTechSkill.create(user_id: @u_2.id, non_tech_skill_id: @nt_2.id)
+# UserNonTechSkill.create(user_id: @u_3.id, non_tech_skill_id: @nt_3.id)
+# UserNonTechSkill.create(user_id: @u_4.id, non_tech_skill_id: @nt_1.id)
+# UserNonTechSkill.create(user_id: @u_4.id, non_tech_skill_id: @nt_3.id)
+#
+# Availability.create(day_of_week: 0, morning: false, afternoon: false, evening: true, user: @u_1)
+# Availability.create(day_of_week: 1, morning: false, afternoon: false, evening: true, user: @u_1)
+# Availability.create(day_of_week: 3, morning: false, afternoon: false, evening: true, user: @u_1)
+# Availability.create(day_of_week: 4, morning: false, afternoon: false, evening: true, user: @u_1)
+# Availability.create(day_of_week: 6, morning: false, afternoon: false, evening: true, user: @u_1)
+#
+# Availability.create(day_of_week: 0, morning: false, afternoon: false, evening: true, user: @u_2)
+# Availability.create(day_of_week: 1, morning: false, afternoon: false, evening: true, user: @u_2)
+# Availability.create(day_of_week: 3, morning: false, afternoon: false, evening: true, user: @u_2)
+# Availability.create(day_of_week: 5, morning: false, afternoon: false, evening: true, user: @u_2)
+#
+# Availability.create(day_of_week: 0, morning: false, afternoon: false, evening: true, user: @u_3)
+# Availability.create(day_of_week: 2, morning: false, afternoon: false, evening: true, user: @u_3)
+# Availability.create(day_of_week: 4, morning: false, afternoon: false, evening: true, user: @u_3)
+# Availability.create(day_of_week: 6, morning: false, afternoon: false, evening: true, user: @u_3)
+#
+# Availability.create(day_of_week: 0, morning: false, afternoon: false, evening: true, user: @u_4)
+# Availability.create(day_of_week: 1, morning: false, afternoon: false, evening: true, user: @u_4)
+# Availability.create(day_of_week: 2, morning: false, afternoon: false, evening: true, user: @u_4)
+# Availability.create(day_of_week: 3, morning: false, afternoon: false, evening: true, user: @u_4)
+# Availability.create(day_of_week: 4, morning: false, afternoon: false, evening: true, user: @u_4)
+# Availability.create(day_of_week: 5, morning: false, afternoon: false, evening: true, user: @u_4)
+# Availability.create(day_of_week: 6, morning: false, afternoon: false, evening: true, user: @u_4)
+#
+#
+# ContactDetails.create(email: 't@mail.com', slack: 's1', phone: 'p1', user: @u_1)
+# ContactDetails.create(email: 'tv@mail.com', slack: 's2', phone: 'p2', user: @u_2)
+# ContactDetails.create(email: 'jor@mail.com', slack: 's3', phone: 'p3', user: @u_3)
+# ContactDetails.create(email: 'j@mail.com', slack: 's4', phone: 'p4', user: @u_4)
