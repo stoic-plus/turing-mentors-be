@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_05_01_231526) do
+ActiveRecord::Schema.define(version: 2019_05_11_174702) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -86,10 +86,11 @@ ActiveRecord::Schema.define(version: 2019_05_01_231526) do
     t.string "program"
     t.string "current_job", default: "student"
     t.text "background"
-    t.string "location", default: "Denver, CO"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.boolean "mentor", default: false
+    t.string "city", default: "Denver"
+    t.string "state", default: "CO"
   end
 
   add_foreign_key "availabilities", "users"

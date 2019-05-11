@@ -8,7 +8,6 @@ class CreateUsers < ActiveRecord::Migration[5.2]
       t.string :program
       t.string :current_job, default: "student"
       t.text :background
-      t.string :location, default: "Denver, CO"
 
       t.timestamps
     end
