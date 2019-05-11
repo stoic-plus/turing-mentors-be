@@ -653,14 +653,14 @@ Accept: application/json
 
 ### Mentor and Mentee Update
 
-`PUT /api/v1/mentors` `PUT /api/v1/mentees`
+`PUT /api/v1/mentors/:id` `PUT /api/v1/mentees/:id`
 
 Not all parameters are required. Very similar to post
 
 
 Currently the following attributes can only be _added_ to on this endpoint, NOT deleted. That will be a separate endpoint for security purposes.
 
-`identities, tech_skills, non_tech_skills`
+`identities, interests, tech_skills, non_tech_skills`
  * Latter two only apply to mentors
 
 
@@ -723,6 +723,9 @@ Accept: application/json
             false
         ]
     },
+    "interests": [
+      "1", "2", "3"
+    ]
     "tech_skills": [
         "4", "1", "3"
     ],
