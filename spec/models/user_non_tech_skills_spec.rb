@@ -7,7 +7,7 @@ describe UserNonTechSkill, type: :model do
         nts_1 = NonTechSkill.create(title: 'massage')
         nts_2 = NonTechSkill.create(title: 'jumping')
         nts_3 = NonTechSkill.create(title: 'machine')
-        user = User.create(first_name: 'Travis', last_name: ' Gee', cohort: 1810, program: 'FE', current_job: 'google', background: 'IT', mentor: true, location: 'Denver, CO')
+        user = User.create(first_name: 'Travis', last_name: ' Gee', cohort: 1810, program: 'FE', current_job: 'google', background: 'IT', mentor: true, city: 'Denver', state: 'CO')
         UserNonTechSkill.for_user([1, 2, 3], user)
 
         actual = user.non_tech_skills

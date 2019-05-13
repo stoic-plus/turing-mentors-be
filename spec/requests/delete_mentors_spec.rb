@@ -10,7 +10,8 @@ describe 'DELETE /mentors', type: :request do
       first_name: "Jordan",
       last_name: "l",
       current_job: "Mcdonalds",
-      location: "Atlanta",
+      city: "Atlanta",
+      state: "GA",
       mentor: true
     )
     @ts_1 = TechSkill.create(title: 'javascript')

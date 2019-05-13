@@ -10,7 +10,8 @@ describe 'GET /mentors/:id', type: :request do
       first_name: "Jordan",
       last_name: "l",
       current_job: "Mcdonalds",
-      location: "Atlanta",
+      city: "Atlanta",
+      state: "GA",
       mentor: true
     )
     @ts_1 = TechSkill.create(title: 'javascript')
@@ -36,7 +37,8 @@ describe 'GET /mentors/:id', type: :request do
         first_name: "Jordan",
         last_name: "l",
         current_job: "Mcdonalds",
-        location: "Atlanta",
+        city: "Atlanta",
+        state: "GA",
         mentor: false
       )
       UserIdentity.create(user: user, identity_id: @i_1.id)

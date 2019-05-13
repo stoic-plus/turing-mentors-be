@@ -43,7 +43,8 @@ describe 'PUT /mentees', type: :request do
         first_name: "Jordan",
         last_name: "l",
         current_job: "Mcdonalds",
-        location: "Atlanta",
+        city: "Atlanta",
+        state: 'GA',
         mentor: true
       )
 

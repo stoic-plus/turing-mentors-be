@@ -29,7 +29,8 @@ describe 'GET /mentees/:id', type: :request do
         first_name: "Jordan",
         last_name: "l",
         current_job: "Mcdonalds",
-        location: "Atlanta",
+        city: "Atlanta",
+        state: "TX",
         mentor: true
       )
       i_1 = Identity.create(title: 'male')

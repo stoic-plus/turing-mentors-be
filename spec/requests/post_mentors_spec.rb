@@ -17,7 +17,8 @@ describe 'POST /mentors', type: :request do
       cohort: 1810,
       program: "BE",
       current_job: "Ibotta",
-      location: 'TAHITI',
+      city: 'TAHITI',
+      state: "TX",
       email: "j@mail.com",
       first_name: "j",
       tech_skills: [1, 2, 4],
@@ -55,7 +56,8 @@ describe 'POST /mentors', type: :request do
       expect(created_user["program"]).to eq(@user[:program])
       expect(created_user).to have_key("current_job")
       expect(created_user["background"]).to eq(@user[:background])
-      expect(created_user["location"]).to eq(@user[:location])
+      expect(created_user["city"]).to eq(@user[:city])
+      expect(created_user["state"]).to eq(@user[:state])
       expect(created_user["mentor"]).to be_truthy
       expect(created_user["tech_skills"]).to eq(tech_skills)
       expect(created_user["non_tech_skills"]).to eq(non_tech_skills)
@@ -107,7 +109,7 @@ describe 'POST /mentors', type: :request do
 
       expect(response.status).to eq(400)
       expect(response).to_not be_successful
-      expect(JSON.parse(response.body)).to eq({"message" => "insufficient user information supplied - missing : [availability, identities, interests, last_name, location, non_tech_skills, phone, slack]"})
+      expect(JSON.parse(response.body)).to eq({"message" => "insufficient user information supplied - missing : [availability, identities, interests, last_name, city, state, non_tech_skills, phone, slack]"})
     end
   end
 end

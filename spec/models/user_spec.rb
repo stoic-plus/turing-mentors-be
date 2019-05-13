@@ -6,7 +6,6 @@ describe User, type: :model do
     it {should validate_presence_of(:last_name)}
     it {should validate_presence_of(:current_job)}
     it {should validate_presence_of(:background)}
-    it {should validate_presence_of(:location)}
   end
 
   describe 'relationships' do
@@ -26,13 +25,13 @@ describe User, type: :model do
       @t_1 = TechSkill.create(title: 'Javascript')
       @t_2 = TechSkill.create(title: 'Ruby')
 
-      @u_1 = User.create(first_name: 'Travis', last_name: 'Gee', cohort: 1810, program: 'FE', current_job: 'graduate', background: 'IT', mentor: true, location: 'Denver, CO')
+      @u_1 = User.create(first_name: 'Travis', last_name: 'Gee', cohort: 1810, program: 'FE', current_job: 'graduate', background: 'IT', mentor: true, city: 'Denver', state: 'CO')
       UserTechSkill.create(user_id: @u_1.id, tech_skill_id: @t_2.id)
 
-      @u_2 = User.create(first_name: 'Ben', last_name: 'Gee', cohort: 1810, program: 'FE', current_job: 'graduate', background: 'IT', mentor: false, location: 'Denver, CO')
+      @u_2 = User.create(first_name: 'Ben', last_name: 'Gee', cohort: 1810, program: 'FE', current_job: 'graduate', background: 'IT', mentor: false, city: 'Denver', state: 'CO')
       UserTechSkill.create(user_id: @u_2.id, tech_skill_id: @t_1.id)
 
-      @u_3 = User.create(first_name: 'Frank', last_name: 'Gee', cohort: 1810, program: 'FE', current_job: 'graduate', background: 'IT', mentor: true, location: 'New York, NY')
+      @u_3 = User.create(first_name: 'Frank', last_name: 'Gee', cohort: 1810, program: 'FE', current_job: 'graduate', background: 'IT', mentor: true, city: 'New York', state: 'NY')
       UserTechSkill.create(user_id: @u_3.id, tech_skill_id: @t_1.id)
     end
 
@@ -109,7 +108,8 @@ describe User, type: :model do
         mentor_attr = {
           first_name: 'first',
           last_name: 'last',
-          location: 'TAHITI',
+          city: 'TAHITI',
+          state: "TX",
           current_job: 'google',
           cohort: 1810,
           program: 'BE',
@@ -120,7 +120,8 @@ describe User, type: :model do
         expect(mentor.mentor).to be_truthy
         expect(mentor.first_name).to eq(mentor_attr[:first_name])
         expect(mentor.last_name).to eq(mentor_attr[:last_name])
-        expect(mentor.location).to eq(mentor_attr[:location])
+        expect(mentor.city).to eq(mentor_attr[:city])
+        expect(mentor.state).to eq(mentor_attr[:state])
         expect(mentor.current_job).to eq(mentor_attr[:current_job])
         expect(mentor.cohort).to eq(mentor_attr[:cohort])
         expect(mentor.program).to eq(mentor_attr[:program])
@@ -131,11 +132,11 @@ describe User, type: :model do
 
   describe 'instance methods' do
     context '#list_skills(:tech)' do
-      it 'returns array of tech_skills this user has' do
+       it 'returns array of tech_skills this user has' do
         t_3 = TechSkill.create(title: 'Elixir')
         t_4 = TechSkill.create(title: 'Java')
 
-        user = User.create(first_name: 'Travis', last_name: 'Bee', cohort: 1810, program: 'FE', current_job: 'graduate', background: 'IT', mentor: true, location: 'Denver, CO')
+        user = User.create(first_name: 'Travis', last_name: 'Bee', cohort: 1810, program: 'FE', current_job: 'graduate', background: 'IT', mentor: true, city: 'Denver', state: 'CO')
         UserTechSkill.create(user_id: user.id, tech_skill_id: t_3.id)
         UserTechSkill.create(user_id: user.id, tech_skill_id: t_4.id)
 
@@ -148,7 +149,7 @@ describe User, type: :model do
 
     context '#list_availability' do
       it 'returns hash with day_of_week keys and time_of_day array value' do
-        user = User.create(first_name: 'Travis', last_name: 'Bee', cohort: 1810, program: 'FE', current_job: 'graduate', background: 'IT', mentor: true, location: 'Denver, CO')
+        user = User.create(first_name: 'Travis', last_name: 'Bee', cohort: 1810, program: 'FE', current_job: 'graduate', background: 'IT', mentor: true, city: 'Denver', state: 'CO')
         Availability.create(day_of_week: 0, morning: false, afternoon: true, evening: false, user: user)
         Availability.create(day_of_week: 1, morning: true, afternoon: true, evening: false, user: user)
 
@@ -165,7 +166,7 @@ describe User, type: :model do
       it 'returns array of identity names' do
         identity = Identity.create(title: "parent")
         identity_2 = Identity.create(title: "basketball person")
-        user = User.create(first_name: 'Travis', last_name: 'Bee', cohort: 1810, program: 'FE', current_job: 'graduate', background: 'IT', mentor: true, location: 'Denver, CO')
+        user = User.create(first_name: 'Travis', last_name: 'Bee', cohort: 1810, program: 'FE', current_job: 'graduate', background: 'IT', mentor: true, city: 'Denver', state: 'CO')
         user.identities << identity
         user.identities << identity_2
         actual = user.list_identities
@@ -179,7 +180,7 @@ describe User, type: :model do
       it 'returns array of interest names' do
         interest = Interest.create(title: "games")
         interest_2 = Interest.create(title: "basketball")
-        user = User.create(first_name: 'Travis', last_name: 'Bee', cohort: 1810, program: 'FE', current_job: 'graduate', background: 'IT', mentor: true, location: 'Denver, CO')
+        user = User.create(first_name: 'Travis', last_name: 'Bee', cohort: 1810, program: 'FE', current_job: 'graduate', background: 'IT', mentor: true, city: 'Denver', state: 'CO')
         user.interests << interest
         user.interests << interest_2
         actual = user.list_interests
@@ -191,7 +192,7 @@ describe User, type: :model do
 
     context '#list_contact_details' do
       it 'returns a hash with contact type as key and string as value' do
-        user = User.create(first_name: 'Travis', last_name: 'Bee', cohort: 1810, program: 'FE', current_job: 'graduate', background: 'IT', mentor: true, location: 'Denver, CO')
+        user = User.create(first_name: 'Travis', last_name: 'Bee', cohort: 1810, program: 'FE', current_job: 'graduate', background: 'IT', mentor: true, city: 'Denver', state: 'CO')
         ContactDetails.create({
           email: "email",
           slack: "@slack",

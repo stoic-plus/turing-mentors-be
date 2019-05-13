@@ -15,7 +15,8 @@ describe 'PUT /mentors', type: :request do
       first_name: "Jordan",
       last_name: "l",
       current_job: "Mcdonalds",
-      location: "Atlanta",
+      city: "Atlanta",
+      state: 'GA',
       mentor: true
     )
     @ts_1 = TechSkill.create(title: 'javascript')
@@ -114,8 +115,9 @@ describe 'PUT /mentors', type: :request do
       returned_user = JSON.parse(response.body)["data"]["attributes"]
       expect(returned_user["mentor"]).to be_truthy
       expect(returned_user["background"]).to eq(@user[:background])
-      expect(returned_user["location"]).to eq(@user[:location])
       expect(returned_user["cohort"]).to eq(@user[:cohort])
+      expect(returned_user["city"]).to eq(@user[:city])
+      expect(returned_user["state"]).to eq(@user[:state])
       expect(returned_user["program"]).to eq(@user[:program])
       expect(returned_user["current_job"]).to eq(@user[:current_job])
       expect(returned_user["email"]).to eq(@user[:email])
@@ -138,7 +140,8 @@ describe 'PUT /mentors', type: :request do
         cohort: 1811,
         program: "FE",
         current_job: "BK",
-        location: "UK",
+        city: "denver",
+        state: "co",
         email: "new_mail",
         first_name: "Jorge",
         tech_skills: [@ts_3.id, @ts_4.id],
